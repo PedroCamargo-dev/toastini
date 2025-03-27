@@ -1,0 +1,53 @@
+{
+  "name": "toastini",
+  "version": "1.0.0",
+  "description": "Toast component for React",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsup src/index.tsx --format esm,cjs --dts --watch",
+    "build:css": "npx @tailwindcss/cli -i ./src/styles/tailwind.css -o ./dist/styles.css --minify",
+    "build:types": "tsup src/index.ts --format esm,cjs --dts",
+    "build": "npm run build:css && npm run build:types",
+    "prepare": "npm run build"
+  },
+  "author": "Pedro Camargo <pedrocamargo3008@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PedroCamargo-dev/toastini.git"
+  },
+  "keywords": [
+    "toast",
+    "notification",
+    "react",
+    "ui"
+  ],
+  "devDependencies": {
+    "@types/react": "^19.0.12",
+    "@types/react-dom": "^19.0.4",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "react": "^19.0.0",
+    "tailwindcss": "^4.0.17",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.0.17",
+    "@tailwindcss/postcss": "^4.0.17",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.484.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.2",
+    "uuid": "^11.1.0"
+  }
+}
