@@ -34,18 +34,24 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(1);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
   const toastRef = useRef<HTMLDivElement>(null);
   const dragStartPos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    const element = toastRef.current;
-    if (!element) return;
-
-    element.style.transform = "translateX(0)";
-    element.style.opacity = "1";
-
-    return () => {};
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 10);
+    return () => clearTimeout(timer);
   }, []);
+
+  const triggerRemove = () => {
+    setIsExiting(true);
+    setTimeout(() => {
+      onRemove();
+    }, 300);
+  };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!draggable) return;
@@ -76,7 +82,7 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
     setIsDragging(false);
 
     if (Math.abs(position.x) > 150) {
-      onRemove();
+      triggerRemove();
     } else {
       setPosition({ x: 0, y: 0 });
       setOpacity(1);
@@ -85,7 +91,7 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
 
   const handleClick = () => {
     if (closeOnClick) {
-      onRemove();
+      triggerRemove();
     }
   };
 
@@ -95,8 +101,10 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
       className={cn(
         "flex w-full max-w-md items-start gap-3 rounded-lg border p-4 shadow-sm transition-all duration-300 ease-in-out",
         TOAST_STYLES[type],
-        isDragging ? "cursor-grabbing" : draggable ? "cursor-grab" : "",
-        "transform translate-x-full opacity-0"
+        isDragging ? "cursor-grabbing" : draggable && "cursor-grab",
+        isVisible && !isExiting
+          ? "opacity-100 translate-x-0 translate-y-0"
+          : "opacity-0 translate-y-4"
       )}
       style={{
         transform: `translateX(${position.x}px)`,
@@ -108,6 +116,7 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      aria-hidden
     >
       <div className="flex-shrink-0">{TOAST_ICONS[type]}</div>
       <div className="flex-1">
@@ -119,7 +128,7 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
       <button
         onClick={(e) => {
           e.stopPropagation();
-          onRemove();
+          triggerRemove();
         }}
         className="flex-shrink-0 rounded-full p-1 hover:bg-muted"
       >

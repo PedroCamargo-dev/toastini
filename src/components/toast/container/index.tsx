@@ -8,12 +8,12 @@ import { ToastPosition } from "../../../types";
 import { toastCore } from "../../../lib/core/toast";
 
 const POSITION_STYLES: Record<ToastPosition, string> = {
-  "top-left": "top-0 left-0",
-  "top-center": "top-0 left-1/2 -translate-x-1/2",
-  "top-right": "top-0 right-0",
-  "bottom-left": "bottom-0 left-0",
-  "bottom-center": "bottom-0 left-1/2 -translate-x-1/2",
-  "bottom-right": "bottom-0 right-0",
+  "top-left": "top-4 left-4 items-start",
+  "top-center": "top-4 left-1/2 -translate-x-1/2 items-center",
+  "top-right": "top-4 right-4 items-end",
+  "bottom-left": "bottom-4 left-4 items-start",
+  "bottom-center": "bottom-4 left-1/2 -translate-x-1/2 items-center",
+  "bottom-right": "bottom-4 right-4 items-end",
 };
 
 export function ToastContainer({
@@ -36,6 +36,8 @@ export function ToastContainer({
 
   if (!mounted || toasts.length === 0) return null;
 
+  const visibleToasts = limit ? toasts.slice(0, limit) : toasts;
+
   const grouped: Record<ToastPosition, IToastProps[]> = {
     "top-left": [],
     "top-center": [],
@@ -45,25 +47,23 @@ export function ToastContainer({
     "bottom-right": [],
   };
 
-  const visibleToasts = limit ? toasts.slice(0, limit) : toasts;
-
-  for (const toast of visibleToasts) {
+  visibleToasts.forEach((toast) => {
     const pos = toast.position ?? "top-right";
     grouped[pos].push(toast);
-  }
+  });
 
   return (
     <>
-      {Object.entries(grouped).map(([position, group]) => {
-        if (group.length === 0) return null;
+      {Object.entries(grouped).map(([position, toasts]) => {
+        if (toasts.length === 0) return null;
 
-        const sorted = newestOnTop ? [...group].reverse() : group;
+        const sorted = newestOnTop ? [...toasts].reverse() : toasts;
 
         return createPortal(
           <div
             key={position}
             className={cn(
-              "fixed z-50 flex flex-col gap-2 p-4 max-h-screen overflow-hidden",
+              "fixed z-50 flex flex-col gap-2 pointer-events-none",
               POSITION_STYLES[position as ToastPosition],
               className
             )}
@@ -72,7 +72,7 @@ export function ToastContainer({
               <div
                 key={toast.id}
                 className={cn(
-                  "transform transition-all duration-300 ease-in-out",
+                  "pointer-events-auto transition-all",
                   toastClassName
                 )}
               >
