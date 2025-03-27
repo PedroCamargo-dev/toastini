@@ -2,8 +2,9 @@ import { useState, useEffect, JSX } from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../../lib/utils";
 import { Toast } from "../toast";
+import type { IToastProps } from "../../../interfaces";
+import type { IToastContainerProps } from "../../../interfaces";
 import { ToastPosition } from "../../../types";
-import type { IToastContainerProps, IToastProps } from "../../../interfaces";
 import { toastCore } from "../../../lib/core/toast";
 
 const POSITION_STYLES: Record<ToastPosition, string> = {
@@ -16,7 +17,6 @@ const POSITION_STYLES: Record<ToastPosition, string> = {
 };
 
 export function ToastContainer({
-  position = "top-right",
   autoClose = 5000,
   closeOnClick = true,
   draggable = true,
@@ -24,58 +24,74 @@ export function ToastContainer({
   limit,
   className,
   toastClassName,
-}: IToastContainerProps) {
+}: Readonly<IToastContainerProps>): JSX.Element | null {
   const [toasts, setToasts] = useState<IToastProps[]>([]);
-  const [isMounted, setIsMounted] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    setMounted(true);
     const unsubscribe = toastCore.subscribe(setToasts);
-    return () => {
-      setIsMounted(false);
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, []);
+
+  if (!mounted || toasts.length === 0) return null;
+
+  const grouped: Record<ToastPosition, IToastProps[]> = {
+    "top-left": [],
+    "top-center": [],
+    "top-right": [],
+    "bottom-left": [],
+    "bottom-center": [],
+    "bottom-right": [],
+  };
 
   const visibleToasts = limit ? toasts.slice(0, limit) : toasts;
 
-  const sortedToasts = newestOnTop
-    ? [...visibleToasts].reverse()
-    : visibleToasts;
-
-  if (!isMounted) {
-    return null;
+  for (const toast of visibleToasts) {
+    const pos = toast.position ?? "top-right";
+    grouped[pos].push(toast);
   }
 
-  return createPortal(
-    <div
-      className={cn(
-        "fixed z-50 flex flex-col gap-2 p-4 max-h-screen overflow-hidden",
-        POSITION_STYLES[position],
-        className
-      )}
-    >
-      {sortedToasts.map((toast) => (
-        <div
-          key={toast.id}
-          className={cn(
-            "transform transition-all duration-300 ease-in-out",
-            toastClassName
-          )}
-        >
-          <Toast
-            {...toast}
-            autoClose={toast.autoClose ?? autoClose}
-            closeOnClick={toast.closeOnClick ?? closeOnClick}
-            draggable={toast.draggable ?? draggable}
-            onRemove={() => {
-              toastCore.remove(toast.id);
-              toast.onClose?.();
-            }}
-          />
-        </div>
-      ))}
-    </div>,
-    document.body
-  ) as unknown as JSX.Element;
+  return (
+    <>
+      {Object.entries(grouped).map(([position, group]) => {
+        if (group.length === 0) return null;
+
+        const sorted = newestOnTop ? [...group].reverse() : group;
+
+        return createPortal(
+          <div
+            key={position}
+            className={cn(
+              "fixed z-50 flex flex-col gap-2 p-4 max-h-screen overflow-hidden",
+              POSITION_STYLES[position as ToastPosition],
+              className
+            )}
+          >
+            {sorted.map((toast) => (
+              <div
+                key={toast.id}
+                className={cn(
+                  "transform transition-all duration-300 ease-in-out",
+                  toastClassName
+                )}
+              >
+                <Toast
+                  {...toast}
+                  autoClose={toast.autoClose ?? autoClose}
+                  closeOnClick={toast.closeOnClick ?? closeOnClick}
+                  draggable={toast.draggable ?? draggable}
+                  onRemove={() => {
+                    toastCore.remove(toast.id);
+                    toast.onClose?.();
+                  }}
+                />
+              </div>
+            ))}
+          </div>,
+          document.body
+        );
+      })}
+    </>
+  );
 }
