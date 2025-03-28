@@ -1,3 +1,5 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'eslint/config'
 import react from 'eslint-plugin-react'
 import typescriptEslint from '@typescript-eslint/eslint-plugin'
@@ -6,8 +8,6 @@ import _import from 'eslint-plugin-import'
 import { fixupPluginRules } from '@eslint/compat'
 import globals from 'globals'
 import tsParser from '@typescript-eslint/parser'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import js from '@eslint/js'
 import { FlatCompat } from '@eslint/eslintrc'
 
@@ -21,6 +21,8 @@ const compat = new FlatCompat({
 
 export default defineConfig([
   {
+    ignores: ['dist'],
+
     extends: compat.extends(
       'eslint:recommended',
       'plugin:@typescript-eslint/recommended',
@@ -79,7 +81,7 @@ export default defineConfig([
           groups: ['builtin', 'external', 'internal'],
         },
       ],
-      'react/react-in-jsx-scope': 'off', 
+      'react/react-in-jsx-scope': 'off',
     },
   },
   {
