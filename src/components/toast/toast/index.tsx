@@ -135,6 +135,7 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      isExiting={isExiting}
       aria-hidden
     >
       <IconWrapper>{TOAST_ICONS[type]}</IconWrapper>

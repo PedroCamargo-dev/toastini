@@ -1,8 +1,15 @@
 import { ThemeProvider } from "styled-components";
-import { theme } from "../styles/theme";
+import { lightTheme, darkTheme } from "../styles/theme";
 
-const ToastProvider = ({ children }: { children: React.ReactNode }) => (
-  <ThemeProvider theme={theme}>{children}</ThemeProvider>
-);
+interface ToastProviderProps {
+  children: React.ReactNode;
+  theme?: "light" | "dark";
+}
+
+const ToastProvider = ({ children, theme = "light" }: ToastProviderProps) => {
+  const selectedTheme = theme === "dark" ? darkTheme : lightTheme;
+
+  return <ThemeProvider theme={selectedTheme}>{children}</ThemeProvider>;
+};
 
 export { ToastProvider };

@@ -1,5 +1,15 @@
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import { ToastType } from "../../../types";
+
+const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(-16px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; transform: translateY(16px); }
+`;
 
 export const ToastContainer = styled.div<{
   isDragging: boolean;
@@ -7,6 +17,7 @@ export const ToastContainer = styled.div<{
   transform: string;
   opacity: number;
   toastType: ToastType;
+  isExiting: boolean;
 }>`
   z-index: 9999;
   display: flex;
@@ -18,33 +29,42 @@ export const ToastContainer = styled.div<{
   border-width: 1px;
   padding: 1rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease-in-out;
   cursor: ${({ isDragging, draggable }) =>
     isDragging ? "grabbing" : draggable ? "grab" : "default"};
   opacity: ${({ opacity }) => opacity};
   transform: ${({ transform }) => transform};
+  transition: ${({ isDragging }) =>
+    isDragging ? "none" : "all 0.3s ease-in-out"};
+  animation: ${({ isExiting }) =>
+    isExiting
+      ? css`
+          ${fadeOut} 0.3s ease-out
+        `
+      : css`
+          ${fadeIn} 0.3s ease-out
+        `};
 
   ${({ toastType, theme }) => {
     const styles = {
       success: css`
-        background: ${theme.colors.green50 || "#f0fdf4"};
-        border-color: ${theme.colors.green200 || "#bbf7d0"};
+        background: ${theme.colors.green50};
+        border-color: ${theme.colors.green200};
       `,
       error: css`
-        background: ${theme.colors.red50 || "#fef2f2"};
-        border-color: ${theme.colors.red200 || "#fecaca"};
+        background: ${theme.colors.red50};
+        border-color: ${theme.colors.red200};
       `,
       info: css`
-        background: ${theme.colors.blue50 || "#eff6ff"};
-        border-color: ${theme.colors.blue200 || "#bfdbfe"};
+        background: ${theme.colors.blue50};
+        border-color: ${theme.colors.blue200};
       `,
       warning: css`
-        background: ${theme.colors.amber50 || "#fffbeb"};
-        border-color: ${theme.colors.amber200 || "#fde68a"};
+        background: ${theme.colors.amber50};
+        border-color: ${theme.colors.amber200};
       `,
       default: css`
-        background: ${theme.colors.gray50 || "#f9fafb"};
-        border-color: ${theme.colors.gray200 || "#e5e7eb"};
+        background: ${theme.colors.gray50};
+        border-color: ${theme.colors.gray200};
       `,
     };
     return styles[toastType] || styles.default;
