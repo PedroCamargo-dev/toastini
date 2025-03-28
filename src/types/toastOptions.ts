@@ -1,3 +1,3 @@
-import { IToastProps } from "../interfaces";
+import { IToastProps } from '@/interfaces'
 
-export type ToastOptions = Partial<Omit<IToastProps, "id" | "title" | "type">>;
+export type ToastOptions = Partial<Omit<IToastProps, 'id' | 'title' | 'type'>>

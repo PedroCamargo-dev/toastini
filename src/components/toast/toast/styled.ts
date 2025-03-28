@@ -1,5 +1,5 @@
-import styled, { css } from "styled-components";
-import { theme } from "../../../styles/theme";
+import styled, { css } from 'styled-components'
+import { theme } from '@/styles/theme'
 
 const getTypeStyles = ($type: keyof typeof theme.colors) => css`
   background-color: ${theme.colors[$type].light.background};
@@ -8,15 +8,15 @@ const getTypeStyles = ($type: keyof typeof theme.colors) => css`
     background-color: ${theme.colors[$type].dark.background};
     border-color: ${theme.colors[$type].dark.border};
   }
-`;
+`
 
 export const ToastContainer = styled.div<{
-  $type: keyof typeof theme.colors;
-  $isDragging: boolean;
-  $draggable: boolean;
-  $transform: string;
-  $opacity: number;
-  $isDraggingNow: boolean;
+  $type: keyof typeof theme.colors
+  $isDragging: boolean
+  $draggable: boolean
+  $transform: string
+  $opacity: number
+  $isDraggingNow: boolean
 }>`
   z-index: 9999;
   display: flex;
@@ -29,26 +29,26 @@ export const ToastContainer = styled.div<{
   padding: 1rem;
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   cursor: ${(props) =>
-    props.$isDragging ? "grabbing" : props.$draggable ? "grab" : "default"};
+    props.$isDragging ? 'grabbing' : props.$draggable ? 'grab' : 'default'};
   transform: ${(props) => props.$transform};
   opacity: ${(props) => props.$opacity};
   transition: ${(props) =>
-    props.$isDraggingNow ? "none" : "all 0.3s ease-in-out"};
+    props.$isDraggingNow ? 'none' : 'all 0.3s ease-in-out'};
 
   ${(props) => getTypeStyles(props.$type)}
-`;
+`
 
 export const IconWrapper = styled.div`
   flex-shrink: 0;
-`;
+`
 
 export const ContentWrapper = styled.div`
   flex: 1 1 0%;
-`;
+`
 
 export const Title = styled.h3`
   font-weight: 500;
-`;
+`
 
 export const Description = styled.div`
   font-size: 0.875rem;
@@ -57,7 +57,7 @@ export const Description = styled.div`
   @media (prefers-color-scheme: dark) {
     color: hsl(240 4.8% 85%);
   }
-`;
+`
 
 const getCloseButtonHoverStyles = ($type: keyof typeof theme.colors) => css`
   &:hover {
@@ -70,10 +70,10 @@ const getCloseButtonHoverStyles = ($type: keyof typeof theme.colors) => css`
       background-color: ${theme.colors[$type].dark.background};
     }
   }
-`;
+`
 
 export const CloseButton = styled.button<{
-  $type: keyof typeof theme.colors;
+  $type: keyof typeof theme.colors
 }>`
   flex-shrink: 0;
   border-radius: 9999px;
@@ -82,4 +82,4 @@ export const CloseButton = styled.button<{
   cursor: pointer;
 
   ${(props) => getCloseButtonHoverStyles(props.$type)}
-`;
+`

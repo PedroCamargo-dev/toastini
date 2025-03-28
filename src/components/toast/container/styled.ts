@@ -1,7 +1,7 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 export const ToastWrapper = styled.div<{
-  $positionStyle: React.CSSProperties;
+  $positionStyle: React.CSSProperties
 }>`
   position: fixed;
   z-index: 9999;
@@ -13,8 +13,8 @@ export const ToastWrapper = styled.div<{
   max-height: 100vh;
 
   ${({ $positionStyle }) => $positionStyle && { ...$positionStyle }}
-`;
+`
 
 export const ToastItemWrapper = styled.div`
   pointer-events: auto;
-`;
+`
