@@ -4,7 +4,7 @@ import { toastManager } from '@/lib/core'
 import { ToastPosition } from '@/types'
 import type { IToastContainerProps, IToastProps } from '@/interfaces'
 import { ToastWrapper, ToastItemWrapper } from './styled'
-import { Toast } from '../toast'
+import { ContainerToast } from '../toast/container-toast'
 
 function getPositionStyle(
   position: ToastPosition,
@@ -39,7 +39,7 @@ function getPositionStyle(
   }
 }
 
-export function ToastContainer({
+export function ContainerToasts({
   autoClose = 5000,
   closeOnClick = true,
   draggable = true,
@@ -91,7 +91,7 @@ export function ToastContainer({
           >
             {sorted.map((toast) => (
               <ToastItemWrapper key={toast.id} style={toastStyle}>
-                <Toast
+                <ContainerToast
                   {...toast}
                   autoClose={toast.autoClose ?? autoClose}
                   closeOnClick={toast.closeOnClick ?? closeOnClick}

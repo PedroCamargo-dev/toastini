@@ -1,14 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { CheckCircle, AlertCircle, Info, X, AlertTriangle } from 'lucide-react'
 import type { IToastProps } from '@/interfaces'
-import {
-  ToastContainer,
-  IconWrapper,
-  ContentWrapper,
-  Title,
-  Description,
-  CloseButton,
-} from './styled'
+import { ToastContainerWrapper } from './container-toast.styled'
+import { ContentWrapper, IconWrapper } from './styled'
+import { Title } from './title.styled'
+import { Description } from './description.styled'
+import { CloseButton } from './button.styled'
 
 const TOAST_ICONS = {
   success: <CheckCircle color="#22c55e" />,
@@ -39,7 +36,9 @@ function getInitialOffset(position: string): number {
   }
 }
 
-export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
+export const ContainerToast: React.FC<
+  IToastProps & { onRemove: () => void }
+> = ({
   title,
   description,
   type = 'default',
@@ -138,7 +137,7 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
     : `translateX(${translateValue}px)`
 
   return (
-    <ToastContainer
+    <ToastContainerWrapper
       ref={toastRef}
       $type={type}
       $isDragging={isDragging}
@@ -167,6 +166,6 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
       >
         <X className="h-4 w-4" />
       </CloseButton>
-    </ToastContainer>
+    </ToastContainerWrapper>
   )
 }
