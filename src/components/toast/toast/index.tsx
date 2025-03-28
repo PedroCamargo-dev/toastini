@@ -1,25 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import type { IToastProps } from "../../../interfaces";
-import { cn } from "../../../lib/utils";
+import { ToastContainer, IconWrapper, Content, CloseButton } from "./styled";
 import { CheckCircle, AlertCircle, Info, X, AlertTriangle } from "lucide-react";
 
 const TOAST_ICONS = {
-  success: <CheckCircle className="h-5 w-5 text-green-500" />,
-  error: <AlertCircle className="h-5 w-5 text-red-500" />,
-  info: <Info className="h-5 w-5 text-blue-500" />,
-  warning: <AlertTriangle className="h-5 w-5 text-amber-500" />,
-  default: <Info className="h-5 w-5 text-gray-500" />,
-};
-
-const TOAST_STYLES = {
-  success:
-    "bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800",
-  error: "bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800",
-  info: "bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800",
-  warning:
-    "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800",
-  default:
-    "bg-gray-50 dark:bg-gray-900/30 border-gray-200 dark:border-gray-800",
+  success: <CheckCircle color="#22c55e" />,
+  error: <AlertCircle color="#ef4444" />,
+  info: <Info color="#3b82f6" />,
+  warning: <AlertTriangle color="#f59e0b" />,
+  default: <Info color="#6b7280" />,
 };
 
 function isVertical(position: string): boolean {
@@ -134,18 +123,13 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
     : `translateX(${translateValue}px)`;
 
   return (
-    <div
+    <ToastContainer
       ref={toastRef}
-      className={cn(
-        "z-[9999] flex w-full max-w-md items-start gap-3 rounded-lg border p-4 shadow-sm transition-all duration-300 ease-in-out",
-        TOAST_STYLES[type],
-        isDragging ? "cursor-grabbing" : draggable && "cursor-grab"
-      )}
-      style={{
-        transform,
-        opacity,
-        transition: isDragging ? "none" : "all 0.3s ease-in-out",
-      }}
+      isDragging={isDragging}
+      draggable={draggable}
+      transform={transform}
+      opacity={opacity}
+      toastType={type}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
@@ -153,22 +137,19 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
       onMouseLeave={handleMouseUp}
       aria-hidden
     >
-      <div className="flex-shrink-0">{TOAST_ICONS[type]}</div>
-      <div className="flex-1">
-        {title && <h3 className="font-medium">{title}</h3>}
-        {description && (
-          <div className="text-sm text-muted-foreground">{description}</div>
-        )}
-      </div>
-      <button
+      <IconWrapper>{TOAST_ICONS[type]}</IconWrapper>
+      <Content>
+        {title && <h3>{title}</h3>}
+        {description && <div>{description}</div>}
+      </Content>
+      <CloseButton
         onClick={(e) => {
           e.stopPropagation();
           triggerRemove();
         }}
-        className="flex-shrink-0 rounded-full p-1 hover:bg-muted"
       >
-        <X className="h-4 w-4" />
-      </button>
-    </div>
+        <X />
+      </CloseButton>
+    </ToastContainer>
   );
 };

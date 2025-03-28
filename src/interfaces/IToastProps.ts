@@ -10,5 +10,4 @@ export interface IToastProps {
   closeOnClick?: boolean;
   draggable?: boolean;
   onClose?: () => void;
-  className?: string;
 }

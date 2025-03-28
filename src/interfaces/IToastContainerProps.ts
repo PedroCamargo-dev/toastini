@@ -8,6 +8,6 @@ export interface IToastContainerProps {
   newestOnTop?: boolean;
   limit?: number;
   margin?: number;
-  className?: string;
-  toastClassName?: string;
+  style?: React.CSSProperties;
+  toastStyle?: React.CSSProperties;
 }

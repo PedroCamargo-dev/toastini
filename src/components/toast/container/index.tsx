@@ -1,11 +1,11 @@
 import { useState, useEffect, JSX } from "react";
 import { createPortal } from "react-dom";
-import { cn } from "../../../lib/utils";
 import { Toast } from "../toast";
 import type { IToastProps } from "../../../interfaces";
 import type { IToastContainerProps } from "../../../interfaces";
 import { ToastPosition } from "../../../types";
 import { toastCore } from "../../../lib/core/toast";
+import { StyledToastWrapper, ToastItemWrapper } from "./styled";
 
 function getPositionStyle(
   position: ToastPosition,
@@ -47,8 +47,8 @@ export function ToastContainer({
   newestOnTop = false,
   limit,
   margin = 16,
-  className,
-  toastClassName,
+  style,
+  toastStyle,
 }: Readonly<IToastContainerProps>): JSX.Element | null {
   const [toasts, setToasts] = useState<IToastProps[]>([]);
   const [mounted, setMounted] = useState(false);
@@ -85,19 +85,13 @@ export function ToastContainer({
         const sorted = newestOnTop ? [...toasts].reverse() : toasts;
 
         return createPortal(
-          <div
+          <StyledToastWrapper
             key={position}
-            style={getPositionStyle(position as ToastPosition, margin)}
-            className={cn(
-              "fixed z-[9999] pointer-events-none flex flex-col gap-2 p-4 max-h-screen",
-              className
-            )}
+            style={style}
+            positionStyle={getPositionStyle(position as ToastPosition, margin)}
           >
             {sorted.map((toast) => (
-              <div
-                key={toast.id}
-                className={cn("pointer-events-auto", toastClassName)}
-              >
+              <ToastItemWrapper key={toast.id} style={toastStyle}>
                 <Toast
                   {...toast}
                   autoClose={toast.autoClose ?? autoClose}
@@ -108,9 +102,9 @@ export function ToastContainer({
                     toast.onClose?.();
                   }}
                 />
-              </div>
+              </ToastItemWrapper>
             ))}
-          </div>,
+          </StyledToastWrapper>,
           document.body
         );
       })}
