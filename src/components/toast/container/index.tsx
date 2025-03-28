@@ -7,14 +7,38 @@ import type { IToastContainerProps } from "../../../interfaces";
 import { ToastPosition } from "../../../types";
 import { toastCore } from "../../../lib/core/toast";
 
-const POSITION_STYLES: Record<ToastPosition, string> = {
-  "top-left": "top-4 left-4 items-start",
-  "top-center": "top-4 left-1/2 -translate-x-1/2 items-center",
-  "top-right": "top-4 right-4 items-end",
-  "bottom-left": "bottom-4 left-4 items-start",
-  "bottom-center": "bottom-4 left-1/2 -translate-x-1/2 items-center",
-  "bottom-right": "bottom-4 right-4 items-end",
-};
+function getPositionStyle(
+  position: ToastPosition,
+  margin = 16
+): React.CSSProperties {
+  const value = `${margin}px`;
+
+  switch (position) {
+    case "top-left":
+      return { top: value, left: value, alignItems: "flex-start" };
+    case "top-center":
+      return {
+        top: value,
+        left: "50%",
+        transform: "translateX(-50%)",
+        alignItems: "center",
+      };
+    case "top-right":
+      return { top: value, right: value, alignItems: "flex-end" };
+    case "bottom-left":
+      return { bottom: value, left: value, alignItems: "flex-start" };
+    case "bottom-center":
+      return {
+        bottom: value,
+        left: "50%",
+        transform: "translateX(-50%)",
+        alignItems: "center",
+      };
+    case "bottom-right":
+    default:
+      return { bottom: value, right: value, alignItems: "flex-end" };
+  }
+}
 
 export function ToastContainer({
   autoClose = 5000,
@@ -22,6 +46,7 @@ export function ToastContainer({
   draggable = true,
   newestOnTop = false,
   limit,
+  margin = 16,
   className,
   toastClassName,
 }: Readonly<IToastContainerProps>): JSX.Element | null {
@@ -62,19 +87,16 @@ export function ToastContainer({
         return createPortal(
           <div
             key={position}
+            style={getPositionStyle(position as ToastPosition, margin)}
             className={cn(
-              "fixed z-50 flex flex-col gap-2 pointer-events-none",
-              POSITION_STYLES[position as ToastPosition],
+              "fixed z-[9999] pointer-events-none flex flex-col gap-2 p-4 max-h-screen",
               className
             )}
           >
             {sorted.map((toast) => (
               <div
                 key={toast.id}
-                className={cn(
-                  "pointer-events-auto transition-all",
-                  toastClassName
-                )}
+                className={cn("pointer-events-auto", toastClassName)}
               >
                 <Toast
                   {...toast}

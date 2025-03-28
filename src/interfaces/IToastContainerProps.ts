@@ -7,6 +7,7 @@ export interface IToastContainerProps {
   draggable?: boolean;
   newestOnTop?: boolean;
   limit?: number;
+  margin?: number;
   className?: string;
   toastClassName?: string;
 }

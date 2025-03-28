@@ -1,5 +1,4 @@
-import type React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { IToastProps } from "../../../interfaces";
 import { cn } from "../../../lib/utils";
 import { CheckCircle, AlertCircle, Info, X, AlertTriangle } from "lucide-react";
@@ -23,6 +22,27 @@ const TOAST_STYLES = {
     "bg-gray-50 dark:bg-gray-900/30 border-gray-200 dark:border-gray-800",
 };
 
+function isVertical(position: string): boolean {
+  return position === "top-center" || position === "bottom-center";
+}
+
+function getInitialOffset(position: string): number {
+  switch (position) {
+    case "top-left":
+    case "bottom-left":
+      return -16;
+    case "top-right":
+    case "bottom-right":
+      return 16;
+    case "top-center":
+      return -16;
+    case "bottom-center":
+      return 16;
+    default:
+      return 0;
+  }
+}
+
 export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
   title,
   description,
@@ -30,61 +50,74 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
   closeOnClick = true,
   draggable = true,
   onRemove,
+  position = "top-right",
 }) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(1);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
   const toastRef = useRef<HTMLDivElement>(null);
-  const dragStartPos = useRef({ x: 0, y: 0 });
+  const vertical = isVertical(position);
+  const initialOffset = getInitialOffset(position);
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [drag, setDrag] = useState(0);
+  const [opacity, setOpacity] = useState(0);
+  const [entered, setEntered] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+  const dragStart = useRef(0);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(true);
+    const t = setTimeout(() => {
+      setEntered(true);
+      setOpacity(1);
     }, 10);
-    return () => clearTimeout(timer);
+    return () => clearTimeout(t);
   }, []);
 
   const triggerRemove = () => {
+    if (isExiting) return;
     setIsExiting(true);
-    setTimeout(() => {
+
+    setOpacity(0);
+
+    let dragValue = 0;
+    if (vertical) {
+      dragValue = position.includes("top") ? -100 : 100;
+    } else {
+      dragValue = position.includes("left") ? -100 : 100;
+    }
+    setDrag(dragValue);
+
+    const exitTimer = setTimeout(() => {
       onRemove();
     }, 300);
+
+    return () => clearTimeout(exitTimer);
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!draggable) return;
-
+    dragStart.current = vertical ? e.clientY - drag : e.clientX - drag;
     setIsDragging(true);
-    dragStartPos.current = {
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
-    };
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return;
 
-    const newX = e.clientX - dragStartPos.current.x;
-    setPosition({ x: newX, y: 0 });
+    const current = vertical ? e.clientY : e.clientX;
+    const offset = current - dragStart.current;
+    setDrag(offset);
 
-    if (Math.abs(newX) > 100) {
-      setOpacity(Math.max(0, 1 - (Math.abs(newX) - 100) / 100));
+    if (Math.abs(offset) > 100) {
+      setOpacity(Math.max(0, 1 - (Math.abs(offset) - 100) / 100));
     } else {
       setOpacity(1);
     }
   };
 
   const handleMouseUp = () => {
-    if (!isDragging) return;
-
     setIsDragging(false);
-
-    if (Math.abs(position.x) > 150) {
+    if (Math.abs(drag) > 150) {
       triggerRemove();
     } else {
-      setPosition({ x: 0, y: 0 });
+      setDrag(0);
       setOpacity(1);
     }
   };
@@ -95,20 +128,22 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
     }
   };
 
+  const translateValue = entered ? drag : initialOffset;
+  const transform = vertical
+    ? `translateY(${translateValue}px)`
+    : `translateX(${translateValue}px)`;
+
   return (
     <div
       ref={toastRef}
       className={cn(
-        "flex w-full max-w-md items-start gap-3 rounded-lg border p-4 shadow-sm transition-all duration-300 ease-in-out",
+        "z-[9999] flex w-full max-w-md items-start gap-3 rounded-lg border p-4 shadow-sm transition-all duration-300 ease-in-out",
         TOAST_STYLES[type],
-        isDragging ? "cursor-grabbing" : draggable && "cursor-grab",
-        isVisible && !isExiting
-          ? "opacity-100 translate-x-0 translate-y-0"
-          : "opacity-0 translate-y-4"
+        isDragging ? "cursor-grabbing" : draggable && "cursor-grab"
       )}
       style={{
-        transform: `translateX(${position.x}px)`,
-        opacity: opacity,
+        transform,
+        opacity,
         transition: isDragging ? "none" : "all 0.3s ease-in-out",
       }}
       onClick={handleClick}
