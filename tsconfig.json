@@ -12,6 +12,7 @@
     "strict": true,
     "paths": {
       "@/*": ["./src/*"],
+      "@/context/*": ["./src/context/*"],
       "@/components/*": ["./src/components/*"],
       "@/interfaces/*": ["./src/interfaces/*"],
       "@/lib/*": ["./src/lib/*"],
