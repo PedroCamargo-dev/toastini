@@ -87,7 +87,7 @@ export function ToastContainer({
           <ToastWrapper
             key={position}
             style={style}
-            positionStyle={getPositionStyle(position as ToastPosition, margin)}
+            $positionStyle={getPositionStyle(position as ToastPosition, margin)}
           >
             {sorted.map((toast) => (
               <ToastItemWrapper key={toast.id} style={toastStyle}>
