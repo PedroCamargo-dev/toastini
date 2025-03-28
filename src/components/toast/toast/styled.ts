@@ -64,7 +64,7 @@ export const ToastContainer = styled.div<{
   draggable: boolean;
   transform: string;
   opacity: number;
-  toastType: ToastType;
+  $toastType: ToastType;
 }>`
   z-index: 9999;
   display: flex;
@@ -84,7 +84,8 @@ export const ToastContainer = styled.div<{
     $isDragging ? "none" : "all 0.3s ease-in-out"};
   animation: ${fadeIn} 0.3s ease-out;
 
-  ${({ toastType = "default", theme }) => getToastStyles({ toastType, theme })}
+  ${({ $toastType = "default", theme }) =>
+    getToastStyles({ toastType: $toastType, theme })}
 `;
 
 export const IconWrapper = styled.div`

@@ -129,7 +129,7 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
       draggable={draggable}
       transform={transform}
       opacity={opacity}
-      toastType={type}
+      $toastType={type}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
