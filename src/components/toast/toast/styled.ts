@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from "styled-components";
+import styled, { css, DefaultTheme, keyframes } from "styled-components";
 import { ToastType } from "../../../types";
 
 const getToastStyles = ({
@@ -6,48 +6,28 @@ const getToastStyles = ({
   theme,
 }: {
   toastType: ToastType;
-  theme: { mode: "light" | "dark"; colors: Record<string, string> };
+  theme: DefaultTheme;
 }) => {
   const styles = {
     success: css`
-      background: ${theme.mode === "dark"
-        ? theme.colors.green950 + "4D" // 30% opacity
-        : theme.colors.green50};
-      border-color: ${theme.mode === "dark"
-        ? theme.colors.green800
-        : theme.colors.green200};
+      background: ${theme.colors.green};
+      border-color: ${theme.colors.greenBorder};
     `,
     error: css`
-      background: ${theme.mode === "dark"
-        ? theme.colors.red950 + "4D"
-        : theme.colors.red50};
-      border-color: ${theme.mode === "dark"
-        ? theme.colors.red800
-        : theme.colors.red200};
+      background: ${theme.colors.red};
+      border-color: ${theme.colors.redBorder};
     `,
     info: css`
-      background: ${theme.mode === "dark"
-        ? theme.colors.blue950 + "4D"
-        : theme.colors.blue50};
-      border-color: ${theme.mode === "dark"
-        ? theme.colors.blue800
-        : theme.colors.blue200};
+      background: ${theme.colors.blue};
+      border-color: ${theme.colors.blueBorder};
     `,
     warning: css`
-      background: ${theme.mode === "dark"
-        ? theme.colors.amber950 + "4D"
-        : theme.colors.amber50};
-      border-color: ${theme.mode === "dark"
-        ? theme.colors.amber800
-        : theme.colors.amber200};
+      background: ${theme.colors.amber};
+      border-color: ${theme.colors.amberBorder};
     `,
     default: css`
-      background: ${theme.mode === "dark"
-        ? theme.colors.gray900 + "4D"
-        : theme.colors.gray50};
-      border-color: ${theme.mode === "dark"
-        ? theme.colors.gray800
-        : theme.colors.gray200};
+      background: ${theme.colors.gray};
+      border-color: ${theme.colors.grayBorder};
     `,
   };
 
@@ -72,10 +52,11 @@ export const ToastContainer = styled.div<{
   max-width: 28rem;
   align-items: flex-start;
   gap: 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: 0.5rem; /* rounded-lg */
   border-width: 1px;
-  padding: 1rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border-style: solid;
+  padding: 1rem; /* p-4 */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* shadow-sm */
   cursor: ${({ $isDragging, draggable }) =>
     $isDragging ? "grabbing" : draggable ? "grab" : "default"};
   opacity: ${({ opacity }) => opacity};
@@ -92,8 +73,8 @@ export const IconWrapper = styled.div`
   flex-shrink: 0;
 
   svg {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.25rem; /* w-5 */
+    height: 1.25rem; /* h-5 */
   }
 `;
 
@@ -102,11 +83,12 @@ export const Content = styled.div`
 
   h3 {
     font-weight: 500;
+    color: ${({ theme }) => theme.colors.foreground};
   }
 
-  div {
+  p {
     font-size: 0.875rem;
-    color: ${({ theme }) => theme.colors.mutedForeground || "#6b7280"};
+    color: ${({ theme }) => theme.colors.mutedForeground};
   }
 `;
 
@@ -116,7 +98,7 @@ export const CloseButton = styled.button`
   padding: 0.25rem;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.muted || "#f3f4f6"};
+    background: ${({ theme }) => theme.colors.muted};
   }
 
   svg {
