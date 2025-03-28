@@ -14,4 +14,6 @@ export const toast = {
     toastManager.show({ title, type: "warning", ...options }),
   remove: (id: string) => toastManager.remove(id),
   removeAll: () => toastManager.removeAll(),
+  default: (title: string, options?: Partial<ToastOptions>) =>
+    toastManager.show({ title, type: "default", ...options }),
 };
