@@ -1,11 +1,10 @@
 import { useState, useEffect, JSX } from "react";
 import { createPortal } from "react-dom";
 import { Toast } from "../toast";
-import type { IToastProps } from "../../../interfaces";
-import type { IToastContainerProps } from "../../../interfaces";
+import type { IToastProps, IToastContainerProps } from "../../../interfaces";
 import { ToastPosition } from "../../../types";
-import { toastCore } from "../../../lib/core/toast";
-import { StyledToastWrapper, ToastItemWrapper } from "./styled";
+import { toastManager } from "../../../lib/core/toastManager";
+import { ToastWrapper, ToastItemWrapper } from "./styled";
 
 function getPositionStyle(
   position: ToastPosition,
@@ -55,7 +54,7 @@ export function ToastContainer({
 
   useEffect(() => {
     setMounted(true);
-    const unsubscribe = toastCore.subscribe(setToasts);
+    const unsubscribe = toastManager.subscribe(setToasts);
     return () => unsubscribe();
   }, []);
 
@@ -85,7 +84,7 @@ export function ToastContainer({
         const sorted = newestOnTop ? [...toasts].reverse() : toasts;
 
         return createPortal(
-          <StyledToastWrapper
+          <ToastWrapper
             key={position}
             style={style}
             positionStyle={getPositionStyle(position as ToastPosition, margin)}
@@ -98,13 +97,13 @@ export function ToastContainer({
                   closeOnClick={toast.closeOnClick ?? closeOnClick}
                   draggable={toast.draggable ?? draggable}
                   onRemove={() => {
-                    toastCore.remove(toast.id);
+                    toastManager.remove(toast.id);
                     toast.onClose?.();
                   }}
                 />
               </ToastItemWrapper>
             ))}
-          </StyledToastWrapper>,
+          </ToastWrapper>,
           document.body
         );
       })}

@@ -2,31 +2,67 @@ import "styled-components";
 
 declare module "styled-components" {
   export interface DefaultTheme {
-    mode: "light" | "dark";
     colors: {
-      green: string;
-      greenBorder: string;
-      greenDarkBorder?: string;
-
-      red: string;
-      redBorder: string;
-      redDarkBorder?: string;
-
-      blue: string;
-      blueBorder: string;
-      blueDarkBorder?: string;
-
-      amber: string;
-      amberBorder: string;
-      amberDarkBorder?: string;
-
-      gray: string;
-      grayBorder: string;
-      grayDarkBorder?: string;
-
-      foreground: string;
-      muted: string;
-      mutedForeground: string;
+      success: {
+        light: {
+          background: string;
+          border: string;
+          text: string;
+        };
+        dark: {
+          background: string;
+          border: string;
+          text: string;
+        };
+      };
+      error: {
+        light: {
+          background: string;
+          border: string;
+          text: string;
+        };
+        dark: {
+          background: string;
+          border: string;
+          text: string;
+        };
+      };
+      info: {
+        light: {
+          background: string;
+          border: string;
+          text: string;
+        };
+        dark: {
+          background: string;
+          border: string;
+          text: string;
+        };
+      };
+      warning: {
+        light: {
+          background: string;
+          border: string;
+          text: string;
+        };
+        dark: {
+          background: string;
+          border: string;
+          text: string;
+        };
+      };
+      default: {
+        light: {
+          background: string;
+          border: string;
+          text: string;
+        };
+        dark: {
+          background: string;
+          border: string;
+          text: string;
+        };
+      };
     };
   }
 }

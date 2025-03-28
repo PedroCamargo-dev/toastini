@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import type { IToastProps } from "../../../interfaces";
-import { ToastContainer, IconWrapper, Content, CloseButton } from "./styled";
+import {
+  ToastContainer,
+  IconWrapper,
+  ContentWrapper,
+  Title,
+  Description,
+  CloseButton,
+} from "./styled";
 import { CheckCircle, AlertCircle, Info, X, AlertTriangle } from "lucide-react";
 
 const TOAST_ICONS = {
@@ -125,11 +132,12 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
   return (
     <ToastContainer
       ref={toastRef}
+      $type={type}
       $isDragging={isDragging}
-      draggable={draggable}
-      transform={transform}
-      opacity={opacity}
-      $toastType={type}
+      $draggable={draggable}
+      $transform={transform}
+      $opacity={opacity}
+      $isDraggingNow={isDragging}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
@@ -138,17 +146,18 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
       aria-hidden
     >
       <IconWrapper>{TOAST_ICONS[type]}</IconWrapper>
-      <Content>
-        {title && <h3>{title}</h3>}
-        {description && <div>{description}</div>}
-      </Content>
+      <ContentWrapper>
+        {title && <Title>{title}</Title>}
+        {description && <Description>{description}</Description>}
+      </ContentWrapper>
       <CloseButton
+        $type={type}
         onClick={(e) => {
           e.stopPropagation();
           triggerRemove();
         }}
       >
-        <X />
+        <X className="h-4 w-4" />
       </CloseButton>
     </ToastContainer>
   );

@@ -1,18 +1,17 @@
 import { IToastProps } from "../interfaces";
-import { toastCore } from "./core/toast";
-
-type ToastOptions = Partial<Omit<IToastProps, "id" | "title" | "type">>;
+import { ToastOptions } from "../types";
+import { toastManager } from "./core/toastManager";
 
 export const toast = {
-  show: (toast: Omit<IToastProps, "id">) => toastCore.show(toast),
+  show: (toast: Omit<IToastProps, "id">) => toastManager.show(toast),
   success: (title: string, options?: Partial<ToastOptions>) =>
-    toastCore.show({ title, type: "success", ...options }),
+    toastManager.show({ title, type: "success", ...options }),
   error: (title: string, options?: Partial<ToastOptions>) =>
-    toastCore.show({ title, type: "error", ...options }),
+    toastManager.show({ title, type: "error", ...options }),
   info: (title: string, options?: Partial<ToastOptions>) =>
-    toastCore.show({ title, type: "info", ...options }),
+    toastManager.show({ title, type: "info", ...options }),
   warning: (title: string, options?: Partial<ToastOptions>) =>
-    toastCore.show({ title, type: "warning", ...options }),
-  remove: (id: string) => toastCore.remove(id),
-  removeAll: () => toastCore.removeAll(),
+    toastManager.show({ title, type: "warning", ...options }),
+  remove: (id: string) => toastManager.remove(id),
+  removeAll: () => toastManager.removeAll(),
 };

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledToastWrapper = styled.div<{
+export const ToastWrapper = styled.div<{
   positionStyle: React.CSSProperties;
 }>`
   position: fixed;

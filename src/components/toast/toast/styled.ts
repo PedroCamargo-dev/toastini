@@ -1,50 +1,22 @@
-import styled, { css, DefaultTheme, keyframes } from "styled-components";
-import { ToastType } from "../../../types";
+import styled, { css } from "styled-components";
+import { theme } from "../../../styles/theme";
 
-const getToastStyles = ({
-  toastType,
-  theme,
-}: {
-  toastType: ToastType;
-  theme: DefaultTheme;
-}) => {
-  const styles = {
-    success: css`
-      background: ${theme.colors.green};
-      border-color: ${theme.colors.greenBorder};
-    `,
-    error: css`
-      background: ${theme.colors.red};
-      border-color: ${theme.colors.redBorder};
-    `,
-    info: css`
-      background: ${theme.colors.blue};
-      border-color: ${theme.colors.blueBorder};
-    `,
-    warning: css`
-      background: ${theme.colors.amber};
-      border-color: ${theme.colors.amberBorder};
-    `,
-    default: css`
-      background: ${theme.colors.gray};
-      border-color: ${theme.colors.grayBorder};
-    `,
-  };
-
-  return styles[toastType] || styles.default;
-};
-
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(-16px); }
-  to { opacity: 1; transform: translateY(0); }
+const getTypeStyles = ($type: keyof typeof theme.colors) => css`
+  background-color: ${theme.colors[$type].light.background};
+  border-color: ${theme.colors[$type].light.border};
+  @media (prefers-color-scheme: dark) {
+    background-color: ${theme.colors[$type].dark.background};
+    border-color: ${theme.colors[$type].dark.border};
+  }
 `;
 
 export const ToastContainer = styled.div<{
+  $type: keyof typeof theme.colors;
   $isDragging: boolean;
-  draggable: boolean;
-  transform: string;
-  opacity: number;
-  $toastType: ToastType;
+  $draggable: boolean;
+  $transform: string;
+  $opacity: number;
+  $isDraggingNow: boolean;
 }>`
   z-index: 9999;
   display: flex;
@@ -52,57 +24,62 @@ export const ToastContainer = styled.div<{
   max-width: 28rem;
   align-items: flex-start;
   gap: 0.75rem;
-  border-radius: 0.5rem; /* rounded-lg */
-  border-width: 1px;
-  border-style: solid;
-  padding: 1rem; /* p-4 */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* shadow-sm */
-  cursor: ${({ $isDragging, draggable }) =>
-    $isDragging ? "grabbing" : draggable ? "grab" : "default"};
-  opacity: ${({ opacity }) => opacity};
-  transform: ${({ transform }) => transform};
-  transition: ${({ $isDragging }) =>
-    $isDragging ? "none" : "all 0.3s ease-in-out"};
-  animation: ${fadeIn} 0.3s ease-out;
+  border-radius: 0.5rem;
+  border: 1px solid;
+  padding: 1rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  cursor: ${(props) =>
+    props.$isDragging ? "grabbing" : props.$draggable ? "grab" : "default"};
+  transform: ${(props) => props.$transform};
+  opacity: ${(props) => props.$opacity};
+  transition: ${(props) =>
+    props.$isDraggingNow ? "none" : "all 0.3s ease-in-out"};
 
-  ${({ $toastType = "default", theme }) =>
-    getToastStyles({ toastType: $toastType, theme })}
+  ${(props) => getTypeStyles(props.$type)}
 `;
 
 export const IconWrapper = styled.div`
   flex-shrink: 0;
+`;
 
-  svg {
-    width: 1.25rem; /* w-5 */
-    height: 1.25rem; /* h-5 */
+export const ContentWrapper = styled.div`
+  flex: 1 1 0%;
+`;
+
+export const Title = styled.h3`
+  font-weight: 500;
+`;
+
+export const Description = styled.div`
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: hsl(240 3.8% 46.1%);
+  @media (prefers-color-scheme: dark) {
+    color: hsl(240 4.8% 85%);
   }
 `;
 
-export const Content = styled.div`
-  flex: 1;
-
-  h3 {
-    font-weight: 500;
-    color: ${({ theme }) => theme.colors.foreground};
+const getCloseButtonHoverStyles = ($type: keyof typeof theme.colors) => css`
+  &:hover {
+    color: ${theme.colors[$type].light.border};
+    background-color: ${theme.colors[$type].light.background};
   }
-
-  p {
-    font-size: 0.875rem;
-    color: ${({ theme }) => theme.colors.mutedForeground};
+  @media (prefers-color-scheme: dark) {
+    &:hover {
+      color: ${theme.colors[$type].dark.border};
+      background-color: ${theme.colors[$type].dark.background};
+    }
   }
 `;
 
-export const CloseButton = styled.button`
+export const CloseButton = styled.button<{
+  $type: keyof typeof theme.colors;
+}>`
   flex-shrink: 0;
   border-radius: 9999px;
   padding: 0.25rem;
+  transition: background-color 0.3s ease-in-out;
+  cursor: pointer;
 
-  &:hover {
-    background: ${({ theme }) => theme.colors.muted};
-  }
-
-  svg {
-    width: 1rem;
-    height: 1rem;
-  }
+  ${(props) => getCloseButtonHoverStyles(props.$type)}
 `;

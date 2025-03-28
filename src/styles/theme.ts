@@ -1,56 +1,66 @@
 import { DefaultTheme } from "styled-components";
 
-export const lightTheme: DefaultTheme = {
-  mode: "light",
+export const theme: DefaultTheme = {
   colors: {
-    // Toast background + borders
-    green: "#f0fdf4",
-    greenBorder: "#bbf7d0",
-    greenDarkBorder: "#166534",
-
-    red: "#fef2f2",
-    redBorder: "#fecaca",
-    redDarkBorder: "#b91c1c",
-
-    blue: "#eff6ff",
-    blueBorder: "#bfdbfe",
-    blueDarkBorder: "#1e40af",
-
-    amber: "#fffbeb",
-    amberBorder: "#fde68a",
-    amberDarkBorder: "#92400e",
-
-    gray: "#f9fafb",
-    grayBorder: "#e5e7eb",
-    grayDarkBorder: "#1f2937",
-
-    // Texts
-    foreground: "#0f172a",
-    muted: "#f3f4f6",
-    mutedForeground: "#6b7280",
-  },
-};
-
-export const darkTheme: DefaultTheme = {
-  mode: "dark",
-  colors: {
-    green: "rgba(5, 46, 22, 0.3)",
-    greenBorder: "#16a34a",
-
-    red: "rgba(69, 10, 10, 0.3)",
-    redBorder: "#ef4444",
-
-    blue: "rgba(23, 37, 84, 0.3)",
-    blueBorder: "#60a5fa",
-
-    amber: "rgba(69, 26, 3, 0.3)",
-    amberBorder: "#fbbf24",
-
-    gray: "rgba(17, 24, 39, 0.3)",
-    grayBorder: "#9ca3af",
-
-    foreground: "#d1d5db",
-    muted: "#1f2937",
-    mutedForeground: "#9ca3af",
+    success: {
+      light: {
+        background: "rgb(240 253 244)",
+        border: "rgb(187 247 208)",
+        text: "rgb(22 163 74)",
+      },
+      dark: {
+        background: "rgba(5, 150, 105, 0.3)",
+        border: "rgb(22 163 74)",
+        text: "rgb(187 247 208)",
+      },
+    },
+    error: {
+      light: {
+        background: "rgb(254 242 242)",
+        border: "rgb(254 202 202)",
+        text: "rgb(220 38 38)",
+      },
+      dark: {
+        background: "rgba(220, 38, 38, 0.3)",
+        border: "rgb(153 27 27)",
+        text: "rgb(254 202 202)",
+      },
+    },
+    info: {
+      light: {
+        background: "rgb(239 246 255)",
+        border: "rgb(191 219 254)",
+        text: "rgb(37 99 235)",
+      },
+      dark: {
+        background: "rgba(37, 99, 235, 0.3)",
+        border: "rgb(30 64 175)",
+        text: "rgb(191 219 254)",
+      },
+    },
+    warning: {
+      light: {
+        background: "rgb(255 251 235)",
+        border: "rgb(253 230 138)",
+        text: "rgb(217 119 6)",
+      },
+      dark: {
+        background: "rgba(217, 119, 6, 0.3)",
+        border: "rgb(120 53 15)",
+        text: "rgb(253 230 138)",
+      },
+    },
+    default: {
+      light: {
+        background: "rgb(249 250 251)",
+        border: "rgb(229 231 235)",
+        text: "rgb(17 24 39)",
+      },
+      dark: {
+        background: "rgba(17, 24, 39, 0.3)",
+        border: "rgb(31 41 55)",
+        text: "rgb(229 231 235)",
+      },
+    },
   },
 };

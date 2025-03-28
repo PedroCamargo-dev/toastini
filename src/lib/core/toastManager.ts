@@ -1,7 +1,6 @@
 import { v4 as uuid } from "uuid";
 import { IToastProps } from "../../interfaces";
-
-type ToastListener = (toasts: IToastProps[]) => void;
+import { ToastListener } from "../../types";
 
 class ToastManager {
   private toasts: IToastProps[] = [];
@@ -51,4 +50,4 @@ class ToastManager {
   }
 }
 
-export const toastCore = new ToastManager();
+export const toastManager = new ToastManager();
