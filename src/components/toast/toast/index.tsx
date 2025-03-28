@@ -125,7 +125,7 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
   return (
     <ToastContainer
       ref={toastRef}
-      isDragging={isDragging}
+      $isDragging={isDragging}
       draggable={draggable}
       transform={transform}
       opacity={opacity}
@@ -135,7 +135,6 @@ export const Toast: React.FC<IToastProps & { onRemove: () => void }> = ({
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      isExiting={isExiting}
       aria-hidden
     >
       <IconWrapper>{TOAST_ICONS[type]}</IconWrapper>

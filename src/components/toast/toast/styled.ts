@@ -1,23 +1,70 @@
 import styled, { css, keyframes } from "styled-components";
 import { ToastType } from "../../../types";
 
+const getToastStyles = ({
+  toastType,
+  theme,
+}: {
+  toastType: ToastType;
+  theme: { mode: "light" | "dark"; colors: Record<string, string> };
+}) => {
+  const styles = {
+    success: css`
+      background: ${theme.mode === "dark"
+        ? theme.colors.green950 + "4D" // 30% opacity
+        : theme.colors.green50};
+      border-color: ${theme.mode === "dark"
+        ? theme.colors.green800
+        : theme.colors.green200};
+    `,
+    error: css`
+      background: ${theme.mode === "dark"
+        ? theme.colors.red950 + "4D"
+        : theme.colors.red50};
+      border-color: ${theme.mode === "dark"
+        ? theme.colors.red800
+        : theme.colors.red200};
+    `,
+    info: css`
+      background: ${theme.mode === "dark"
+        ? theme.colors.blue950 + "4D"
+        : theme.colors.blue50};
+      border-color: ${theme.mode === "dark"
+        ? theme.colors.blue800
+        : theme.colors.blue200};
+    `,
+    warning: css`
+      background: ${theme.mode === "dark"
+        ? theme.colors.amber950 + "4D"
+        : theme.colors.amber50};
+      border-color: ${theme.mode === "dark"
+        ? theme.colors.amber800
+        : theme.colors.amber200};
+    `,
+    default: css`
+      background: ${theme.mode === "dark"
+        ? theme.colors.gray900 + "4D"
+        : theme.colors.gray50};
+      border-color: ${theme.mode === "dark"
+        ? theme.colors.gray800
+        : theme.colors.gray200};
+    `,
+  };
+
+  return styles[toastType] || styles.default;
+};
+
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(-16px); }
   to { opacity: 1; transform: translateY(0); }
 `;
 
-const fadeOut = keyframes`
-  from { opacity: 1; }
-  to { opacity: 0; transform: translateY(16px); }
-`;
-
 export const ToastContainer = styled.div<{
-  isDragging: boolean;
+  $isDragging: boolean;
   draggable: boolean;
   transform: string;
   opacity: number;
   toastType: ToastType;
-  isExiting: boolean;
 }>`
   z-index: 9999;
   display: flex;
@@ -29,46 +76,15 @@ export const ToastContainer = styled.div<{
   border-width: 1px;
   padding: 1rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  cursor: ${({ isDragging, draggable }) =>
-    isDragging ? "grabbing" : draggable ? "grab" : "default"};
+  cursor: ${({ $isDragging, draggable }) =>
+    $isDragging ? "grabbing" : draggable ? "grab" : "default"};
   opacity: ${({ opacity }) => opacity};
   transform: ${({ transform }) => transform};
-  transition: ${({ isDragging }) =>
-    isDragging ? "none" : "all 0.3s ease-in-out"};
-  animation: ${({ isExiting }) =>
-    isExiting
-      ? css`
-          ${fadeOut} 0.3s ease-out
-        `
-      : css`
-          ${fadeIn} 0.3s ease-out
-        `};
+  transition: ${({ $isDragging }) =>
+    $isDragging ? "none" : "all 0.3s ease-in-out"};
+  animation: ${fadeIn} 0.3s ease-out;
 
-  ${({ toastType, theme }) => {
-    const styles = {
-      success: css`
-        background: ${theme.colors.green50};
-        border-color: ${theme.colors.green200};
-      `,
-      error: css`
-        background: ${theme.colors.red50};
-        border-color: ${theme.colors.red200};
-      `,
-      info: css`
-        background: ${theme.colors.blue50};
-        border-color: ${theme.colors.blue200};
-      `,
-      warning: css`
-        background: ${theme.colors.amber50};
-        border-color: ${theme.colors.amber200};
-      `,
-      default: css`
-        background: ${theme.colors.gray50};
-        border-color: ${theme.colors.gray200};
-      `,
-    };
-    return styles[toastType] || styles.default;
-  }}
+  ${({ toastType = "default", theme }) => getToastStyles({ toastType, theme })}
 `;
 
 export const IconWrapper = styled.div`
