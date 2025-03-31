@@ -2,9 +2,9 @@ import { JSX } from 'react'
 import { createPortal } from 'react-dom'
 import { toastManager } from '@/lib/core'
 import { ToastPosition } from '@/types'
-import type { IToastContainerProps } from '@/interfaces'
 import { getPositionStyle } from '@/utils'
 import { useContainerToasts } from '@/hooks'
+import { IContainerToasts } from '@/interfaces/IContainerToasts'
 import { ToastWrapper, ToastItemWrapper } from './styled'
 import { ContainerToast } from '../toast/container-toast'
 
@@ -15,9 +15,9 @@ export function ContainerToasts({
   newestOnTop = false,
   limit,
   margin = 16,
-  style,
-  toastStyle,
-}: Readonly<IToastContainerProps>): JSX.Element | null {
+  toastWrapperStyle,
+  toastItemWrapperStyle,
+}: Readonly<IContainerToasts>): JSX.Element | null {
   const { groupedToasts, mounted, toasts } = useContainerToasts({ limit })
 
   if (!mounted || toasts.length === 0) return null
@@ -34,11 +34,11 @@ export function ContainerToasts({
         return createPortal(
           <ToastWrapper
             key={position}
-            style={style}
+            style={toastWrapperStyle}
             $positionStyle={getPositionStyle(position as ToastPosition, margin)}
           >
             {sortedToasts.map((toast) => (
-              <ToastItemWrapper key={toast.id} style={toastStyle}>
+              <ToastItemWrapper key={toast.id} style={toastItemWrapperStyle}>
                 <ContainerToast
                   {...toast}
                   autoClose={toast.autoClose ?? autoClose}

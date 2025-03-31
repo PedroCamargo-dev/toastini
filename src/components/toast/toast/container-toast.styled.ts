@@ -1,5 +1,14 @@
 import styled, { css, DefaultTheme } from 'styled-components'
 
+interface ToastContainerWrapperProps {
+  $type: keyof DefaultTheme['colors']
+  $isDragging: boolean
+  $draggable: boolean
+  $transform: string
+  $opacity: number
+  $isDraggingNow: boolean
+}
+
 const getTypeStyles = ($type: keyof DefaultTheme['colors']) => css`
   background-color: ${({ theme }) => theme.colors[$type].background};
   border-color: ${({ theme }) => theme.colors[$type].border};
@@ -7,14 +16,7 @@ const getTypeStyles = ($type: keyof DefaultTheme['colors']) => css`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `
 
-export const ToastContainerWrapper = styled.div<{
-  $type: keyof DefaultTheme['colors']
-  $isDragging: boolean
-  $draggable: boolean
-  $transform: string
-  $opacity: number
-  $isDraggingNow: boolean
-}>`
+export const ToastContainerWrapper = styled.div<ToastContainerWrapperProps>`
   z-index: 9999;
   display: flex;
   width: 100%;
@@ -33,4 +35,5 @@ export const ToastContainerWrapper = styled.div<{
     props.$isDraggingNow ? 'none' : 'all 0.3s ease-in-out'};
 
   ${(props) => getTypeStyles(props.$type)}
+  ${(props) => ({ ...props.style })}
 `

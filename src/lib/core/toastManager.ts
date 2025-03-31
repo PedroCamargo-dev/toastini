@@ -1,9 +1,9 @@
 import { v4 as uuid } from 'uuid'
-import { IToastProps } from '@/interfaces'
+import { IToast } from '@/interfaces'
 import { ToastListener } from '@/types'
 
 class ToastManager {
-  private toasts: IToastProps[] = []
+  private toasts: IToast[] = []
   private listeners: ToastListener[] = []
 
   subscribe(listener: ToastListener) {
@@ -20,9 +20,9 @@ class ToastManager {
     this.listeners.forEach((listener) => listener(this.toasts))
   }
 
-  show(toast: Omit<IToastProps, 'id'>) {
+  show(toast: Omit<IToast, 'id'>) {
     const id = uuid()
-    const newToast: IToastProps = { ...toast, id }
+    const newToast: IToast = { ...toast, id }
     this.toasts = [...this.toasts, newToast]
     this.notify()
 

@@ -1,2 +1,3 @@
-export * from './IToastContainerProps'
-export * from './IToastProps'
+export * from './IToastContainer'
+export * from './IContainerToast'
+export * from './IToast'

@@ -21,4 +21,5 @@ export const CloseButton = styled.button<{
   font-size: 1rem;
 
   ${(props) => getCloseButtonHoverStyles(props.$type)}
+  ${(props) => ({ ...props.style })}
 `

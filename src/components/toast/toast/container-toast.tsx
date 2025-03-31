@@ -1,5 +1,5 @@
 import { X } from 'lucide-react'
-import type { IToastProps } from '@/interfaces'
+import type { IContainerToast } from '@/interfaces'
 import { useContainerToast } from '@/hooks'
 import { TOAST_ICONS } from '@/constants'
 import { ToastContainerWrapper } from './container-toast.styled'
@@ -16,7 +16,13 @@ export function ContainerToast({
   draggable = true,
   onRemove,
   position = 'top-right',
-}: IToastProps & { onRemove: () => void }) {
+  toastContainerWrapperStyle,
+  iconWrapperStyle,
+  contentWrapperStyle,
+  titleContentStyle,
+  descriptionContentStyle,
+  closeButtonStyle,
+}: Readonly<IContainerToast>) {
   const {
     toastRef,
     isDragging,
@@ -43,12 +49,17 @@ export function ContainerToast({
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      style={toastContainerWrapperStyle}
       aria-hidden
     >
-      <IconWrapper>{TOAST_ICONS[type]}</IconWrapper>
-      <ContentWrapper>
-        {title && <Title>{title}</Title>}
-        {description && <Description>{description}</Description>}
+      <IconWrapper style={iconWrapperStyle}>{TOAST_ICONS[type]}</IconWrapper>
+      <ContentWrapper style={contentWrapperStyle}>
+        {title && <Title style={titleContentStyle}>{title}</Title>}
+        {description && (
+          <Description style={descriptionContentStyle}>
+            {description}
+          </Description>
+        )}
       </ContentWrapper>
       <CloseButton
         $type={type}
@@ -56,6 +67,7 @@ export function ContainerToast({
           e.stopPropagation()
           triggerRemove()
         }}
+        style={closeButtonStyle}
       >
         <X className="h-4 w-4" />
       </CloseButton>

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { DEFAULT_POSITION } from '@/constants'
-import { IToastProps } from '@/interfaces'
+import { IToast } from '@/interfaces'
 import { toastManager } from '@/lib/core'
 import { ToastPosition } from '@/types'
 
@@ -9,7 +9,7 @@ interface IUseContainerToasts {
 }
 
 const useContainerToasts = ({ limit }: IUseContainerToasts) => {
-  const [toasts, setToasts] = useState<IToastProps[]>([])
+  const [toasts, setToasts] = useState<IToast[]>([])
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const useContainerToasts = ({ limit }: IUseContainerToasts) => {
   )
 
   const groupedToasts = useMemo(() => {
-    return visibleToasts.reduce<Record<ToastPosition, IToastProps[]>>(
+    return visibleToasts.reduce<Record<ToastPosition, IToast[]>>(
       (acc, toast) => {
         const position = toast.position ?? DEFAULT_POSITION
         acc[position] = acc[position] || []

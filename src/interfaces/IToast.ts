@@ -1,6 +1,6 @@
 import { ToastPosition, ToastType } from '@/types'
 
-export interface IToastProps {
+export interface IToast {
   id: string
   title?: string
   description?: React.ReactNode

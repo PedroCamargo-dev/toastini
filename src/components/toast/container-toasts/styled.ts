@@ -13,8 +13,11 @@ export const ToastWrapper = styled.div<{
   max-height: 100vh;
 
   ${({ $positionStyle }) => $positionStyle && { ...$positionStyle }}
+  ${(props) => ({ ...props.style })}
 `
 
 export const ToastItemWrapper = styled.div`
   pointer-events: auto;
+
+  ${(props) => ({ ...props.style })}
 `

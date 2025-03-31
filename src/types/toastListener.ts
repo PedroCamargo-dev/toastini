@@ -1,3 +1,3 @@
-import { IToastProps } from '@/interfaces'
+import { IToast } from '@/interfaces'
 
-export type ToastListener = (toasts: IToastProps[]) => void
+export type ToastListener = (toasts: IToast[]) => void

@@ -5,6 +5,8 @@ export const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  ${(props) => ({ ...props.style })}
 `
 
 export const ContentWrapper = styled.div`
@@ -12,4 +14,6 @@ export const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+
+  ${(props) => ({ ...props.style })}
 `
