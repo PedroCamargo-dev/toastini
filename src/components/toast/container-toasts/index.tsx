@@ -1,43 +1,12 @@
-import { useState, useEffect, JSX } from 'react'
+import { JSX } from 'react'
 import { createPortal } from 'react-dom'
 import { toastManager } from '@/lib/core'
 import { ToastPosition } from '@/types'
-import type { IToastContainerProps, IToastProps } from '@/interfaces'
+import type { IToastContainerProps } from '@/interfaces'
+import { getPositionStyle } from '@/utils'
+import { useContainerToasts } from '@/hooks'
 import { ToastWrapper, ToastItemWrapper } from './styled'
 import { ContainerToast } from '../toast/container-toast'
-
-function getPositionStyle(
-  position: ToastPosition,
-  margin = 16,
-): React.CSSProperties {
-  const value = `${margin}px`
-
-  switch (position) {
-    case 'top-left':
-      return { top: value, left: value, alignItems: 'flex-start' }
-    case 'top-center':
-      return {
-        top: value,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        alignItems: 'center',
-      }
-    case 'top-right':
-      return { top: value, right: value, alignItems: 'flex-end' }
-    case 'bottom-left':
-      return { bottom: value, left: value, alignItems: 'flex-start' }
-    case 'bottom-center':
-      return {
-        bottom: value,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        alignItems: 'center',
-      }
-    case 'bottom-right':
-    default:
-      return { bottom: value, right: value, alignItems: 'flex-end' }
-  }
-}
 
 export function ContainerToasts({
   autoClose = 5000,
@@ -49,39 +18,18 @@ export function ContainerToasts({
   style,
   toastStyle,
 }: Readonly<IToastContainerProps>): JSX.Element | null {
-  const [toasts, setToasts] = useState<IToastProps[]>([])
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-    const unsubscribe = toastManager.subscribe(setToasts)
-    return () => unsubscribe()
-  }, [])
+  const { groupedToasts, mounted, toasts } = useContainerToasts({ limit })
 
   if (!mounted || toasts.length === 0) return null
 
-  const visibleToasts = limit ? toasts.slice(0, limit) : toasts
-
-  const grouped: Record<ToastPosition, IToastProps[]> = {
-    'top-left': [],
-    'top-center': [],
-    'top-right': [],
-    'bottom-left': [],
-    'bottom-center': [],
-    'bottom-right': [],
-  }
-
-  visibleToasts.forEach((toast) => {
-    const pos = toast.position ?? 'top-right'
-    grouped[pos].push(toast)
-  })
-
   return (
     <>
-      {Object.entries(grouped).map(([position, toasts]) => {
-        if (toasts.length === 0) return null
+      {Object.entries(groupedToasts).map(([position, toastsGroup]) => {
+        if (toastsGroup.length === 0) return null
 
-        const sorted = newestOnTop ? [...toasts].reverse() : toasts
+        const sortedToasts = newestOnTop
+          ? [...toastsGroup].reverse()
+          : toastsGroup
 
         return createPortal(
           <ToastWrapper
@@ -89,7 +37,7 @@ export function ContainerToasts({
             style={style}
             $positionStyle={getPositionStyle(position as ToastPosition, margin)}
           >
-            {sorted.map((toast) => (
+            {sortedToasts.map((toast) => (
               <ToastItemWrapper key={toast.id} style={toastStyle}>
                 <ContainerToast
                   {...toast}
