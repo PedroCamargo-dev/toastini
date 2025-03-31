@@ -1,7 +1,7 @@
-import styled, { css, IThemeToast } from 'styled-components'
+import styled, { css, DefaultTheme } from 'styled-components'
 
 interface ToastContainerWrapperProps {
-  $type: keyof IThemeToast['colors']
+  $type: keyof DefaultTheme['colors']
   $isDragging: boolean
   $draggable: boolean
   $transform: string
@@ -9,7 +9,7 @@ interface ToastContainerWrapperProps {
   $isDraggingNow: boolean
 }
 
-const getTypeStyles = ($type: keyof IThemeToast['colors']) => css`
+const getTypeStyles = ($type: keyof DefaultTheme['colors']) => css`
   background-color: ${({ theme }) => theme.colors[$type].background};
   border-color: ${({ theme }) => theme.colors[$type].border};
   color: ${({ theme }) => theme.colors[$type].text};

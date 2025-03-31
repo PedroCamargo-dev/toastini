@@ -1,7 +1,7 @@
 import 'styled-components'
 
 declare module 'styled-components' {
-  export interface IThemeToast {
+  export interface DefaultTheme {
     colors: {
       success: {
         background: string

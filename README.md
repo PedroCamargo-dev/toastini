@@ -54,10 +54,10 @@ export default App
 
 ```tsx
 import React from 'react'
-import { ToastProvider, ContainerToasts, toast, IThemeToast } from 'toastini'
+import { ToastProvider, ContainerToasts, toast, DefaultTheme } from 'toastini'
 
 function App() {
-  const myCustomTheme: IThemeToast = {
+  const myCustomTheme: DefaultTheme = {
     colors: {
       success: {
         background: '#e0ffe0',
