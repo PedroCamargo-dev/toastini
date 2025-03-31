@@ -1,16 +1,17 @@
-import {
-  ThemeProvider as SThemeProvider,
-  DefaultTheme,
-} from 'styled-components'
+import { ThemeProvider as SThemeProvider, IThemeToast } from 'styled-components'
 import { ReactNode, useEffect, useState } from 'react'
 import { lightTheme, darkTheme } from '@/styles/theme'
 
 interface ToastProviderProps {
   children: ReactNode
+  customTheme?: Partial<IThemeToast>
 }
 
-export const ToastProvider = ({ children }: ToastProviderProps) => {
-  const [selectedTheme, setSelectedTheme] = useState<DefaultTheme>(() =>
+export const ToastProvider = ({
+  children,
+  customTheme,
+}: ToastProviderProps) => {
+  const [selectedTheme, setSelectedTheme] = useState<IThemeToast>(() =>
     document.documentElement.classList.contains('dark')
       ? darkTheme
       : lightTheme,
@@ -42,5 +43,13 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
     return () => observer.disconnect()
   }, [])
 
-  return <SThemeProvider theme={selectedTheme}>{children}</SThemeProvider>
+  const mergedTheme: IThemeToast = {
+    ...selectedTheme,
+    colors: {
+      ...selectedTheme.colors,
+      ...(customTheme?.colors || {}),
+    },
+  }
+
+  return <SThemeProvider theme={mergedTheme}>{children}</SThemeProvider>
 }

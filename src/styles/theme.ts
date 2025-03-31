@@ -1,6 +1,6 @@
-import { DefaultTheme } from 'styled-components'
+import { IThemeToast } from 'styled-components'
 
-export const lightTheme: DefaultTheme = {
+export const lightTheme: IThemeToast = {
   colors: {
     success: {
       background: 'rgb(240 253 244)',
@@ -30,7 +30,7 @@ export const lightTheme: DefaultTheme = {
   },
 }
 
-export const darkTheme: DefaultTheme = {
+export const darkTheme: IThemeToast = {
   colors: {
     success: {
       background: 'rgba(5, 150, 105, 0.3)',

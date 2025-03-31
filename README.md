@@ -28,11 +28,11 @@ pnpm add toastini
 
 ## 🚀 Uso Básico
 
+### Exemplo 1: Toast Básico
+
 ```tsx
 import React from 'react'
-import { ContainerToasts, toast, ToastProvider } from 'toastini'
-import { ThemeProvider } from 'styled-components'
-import { lightTheme } from 'toastini'
+import { ToastProvider, ContainerToasts, toast } from 'toastini'
 
 function App() {
   const showToast = () => {
@@ -40,14 +40,46 @@ function App() {
   }
 
   return (
-    <ThemeProvider theme={lightTheme}>
-      <ToastProvider>
-        <button onClick={showToast}>Mostrar Toast</button>
-        <ContainerToasts />
-      </ToastProvider>
-    </ThemeProvider>
+    <ToastProvider>
+      <button onClick={showToast}>Mostrar Toast</button>
+      <ContainerToasts />
+    </ToastProvider>
   )
 }
+
+export default App
+```
+
+### Exemplo 2: Toast Simples com Customização de Tema
+
+```tsx
+import React from 'react'
+import { ToastProvider, ContainerToasts, toast, IThemeToast } from 'toastini'
+
+function App() {
+  const myCustomTheme: IThemeToast = {
+    colors: {
+      success: {
+        background: '#e0ffe0',
+        border: '#00ff00',
+        text: '#006600',
+      },
+    },
+  }
+
+  const showToast = () => {
+    toast.success('Operação realizada com sucesso!')
+  }
+
+  return (
+    <ToastProvider customTheme={myCustomTheme}>
+      <button onClick={showToast}>Mostrar Toast</button>
+      <ContainerToasts />
+    </ToastProvider>
+  )
+}
+
+export default App
 ```
 
 ## 🛠️ API

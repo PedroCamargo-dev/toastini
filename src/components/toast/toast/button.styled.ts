@@ -1,6 +1,6 @@
-import styled, { css, DefaultTheme } from 'styled-components'
+import styled, { css, IThemeToast } from 'styled-components'
 
-const getCloseButtonHoverStyles = ($type: keyof DefaultTheme['colors']) => css`
+const getCloseButtonHoverStyles = ($type: keyof IThemeToast['colors']) => css`
   &:hover {
     background-color: ${({ theme }) => theme.colors[$type].border};
     color: ${({ theme }) => theme.colors[$type].text};
@@ -9,7 +9,7 @@ const getCloseButtonHoverStyles = ($type: keyof DefaultTheme['colors']) => css`
 `
 
 export const CloseButton = styled.button<{
-  $type: keyof DefaultTheme['colors']
+  $type: keyof IThemeToast['colors']
 }>`
   flex-shrink: 0;
   border: none;
