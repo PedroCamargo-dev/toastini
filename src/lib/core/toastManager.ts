@@ -36,6 +36,10 @@ class ToastManager {
   }
 
   remove(id: string) {
+    const toastToRemove = this.toasts.find((toast) => toast.id === id)
+    if (toastToRemove && typeof toastToRemove.onClose === 'function') {
+      toastToRemove.onClose()
+    }
     this.toasts = this.toasts.filter((toast) => toast.id !== id)
     this.notify()
   }
