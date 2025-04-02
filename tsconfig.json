@@ -10,15 +10,17 @@
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "strict": true,
+    "types": ["jest", "@testing-library/jest-dom"],
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/context/*": ["./src/context/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/interfaces/*": ["./src/interfaces/*"],
-      "@/lib/*": ["./src/lib/*"],
-      "@/styles/*": ["./src/styles/*"],
-      "@/types/*": ["./src/types/*"],
-      "@/utils/*": ["./src/utils/*"]
+      "@/*": ["./*"],
+      "@/context/*": ["./context/*"],
+      "@/components/*": ["./components/*"],
+      "@/interfaces/*": ["./interfaces/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/styles/*": ["./styles/*"],
+      "@/types/*": ["./types/*"],
+      "@/utils/*": ["./utils/*"]
     }
   },
   "include": ["src"]
