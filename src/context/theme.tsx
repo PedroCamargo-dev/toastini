@@ -14,11 +14,7 @@ export const ToastProvider = ({
   children,
   customTheme,
 }: ToastProviderProps) => {
-  const [selectedTheme, setSelectedTheme] = useState<DefaultTheme>(() =>
-    document.documentElement.classList.contains('dark')
-      ? darkTheme
-      : lightTheme,
-  )
+  const [selectedTheme, setSelectedTheme] = useState<DefaultTheme>(lightTheme)
 
   useEffect(() => {
     const updateTheme = () => {
@@ -31,6 +27,8 @@ export const ToastProvider = ({
         }
       })
     }
+
+    updateTheme()
 
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {

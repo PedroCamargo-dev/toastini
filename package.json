@@ -16,7 +16,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:coverage:watch": "jest --coverage --watch",
-    "dev": "tsup src/index.tsx --format esm,cjs --dts --watch",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "lint-staged": "lint-staged",
     "prepare": "husky && npm run build"
