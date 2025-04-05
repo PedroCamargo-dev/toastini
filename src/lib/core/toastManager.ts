@@ -1,6 +1,6 @@
-import { v4 as uuid } from 'uuid'
 import { IToast } from '@/interfaces'
 import { ToastListener } from '@/types'
+import { generateId } from '@/utils'
 
 class ToastManager {
   private toasts: IToast[] = []
@@ -21,7 +21,7 @@ class ToastManager {
   }
 
   show(toast: Omit<IToast, 'id'>) {
-    const id = uuid()
+    const id = generateId()
     const newToast: IToast = { ...toast, id }
     this.toasts = [...this.toasts, newToast]
     this.notify()

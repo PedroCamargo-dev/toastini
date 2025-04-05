@@ -8,7 +8,7 @@ export default defineConfig({
   format: ['esm', 'cjs'],
   entry: ['src/index.ts'],
   clean: true,
-  external: ['react'],
+  external: ['react', 'react-dom'],
   banner: {
     js: '"use client";',
   },
