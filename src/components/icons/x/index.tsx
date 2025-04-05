@@ -5,7 +5,7 @@ interface XProps extends React.SVGProps<SVGSVGElement> {
   color?: string
 }
 
-function X({ size = 24, color = 'currentColor', ...props }: Readonly<XProps>) {
+function X({ size = 20, color = 'currentColor', ...props }: Readonly<XProps>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -14,13 +14,13 @@ function X({ size = 24, color = 'currentColor', ...props }: Readonly<XProps>) {
       viewBox="0 0 24 24"
       fill="none"
       stroke={color}
-      strokeWidth="2"
+      strokeWidth={2}
       strokeLinecap="round"
       strokeLinejoin="round"
       {...props}
     >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
+      <path d="M18 6L6 18" />
+      <path d="M6 6l12 12" />
     </svg>
   )
 }

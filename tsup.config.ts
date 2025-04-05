@@ -3,9 +3,9 @@ import { defineConfig } from 'tsup'
 export default defineConfig({
   minify: true,
   target: 'es2018',
-  sourcemap: true,
+  sourcemap: false,
   dts: true,
-  format: ['esm', 'cjs'],
+  format: ['esm'],
   entry: ['src/index.ts'],
   clean: true,
   external: ['react', 'react-dom'],
