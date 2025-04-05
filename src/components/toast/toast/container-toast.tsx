@@ -1,7 +1,7 @@
-import { X } from 'lucide-react'
 import type { IContainerToast } from '@/interfaces'
 import { useContainerToast } from '@/hooks'
 import { TOAST_ICONS } from '@/constants'
+import { X } from '@/components/icons'
 import { ToastContainerWrapper } from './container-toast.styled'
 import { ContentWrapper, IconWrapper } from './styled'
 import { Title } from './title.styled'
@@ -69,7 +69,7 @@ export function ContainerToast({
         }}
         style={closeButtonStyle}
       >
-        <X className="h-4 w-4" />
+        <X />
       </CloseButton>
     </ToastContainerWrapper>
   )
