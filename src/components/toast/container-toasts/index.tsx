@@ -1,12 +1,11 @@
 import { JSX } from 'react'
 import { createPortal } from 'react-dom'
+import clsx from 'clsx'
 import { toastManager } from '@/lib/core'
-import { ToastPosition } from '@/types'
-import { getPositionStyle } from '@/utils'
 import { useContainerToasts } from '@/hooks'
 import { IContainerToasts } from '@/interfaces/IContainerToasts'
-import { ToastWrapper, ToastItemWrapper } from './styled'
-import { ContainerToast } from '../toast/container-toast'
+import { ContainerToast } from '../toast'
+import '@/styles/styles.css'
 
 export function ContainerToasts({
   autoClose = 5000,
@@ -15,8 +14,14 @@ export function ContainerToasts({
   newestOnTop = false,
   limit,
   margin = 16,
-  toastWrapperStyle,
-  toastItemWrapperStyle,
+  wrapperClassName,
+  itemClassName,
+  className,
+  iconClassName,
+  contentClassName,
+  titleClassName,
+  descriptionClassName,
+  closeButtonClassName,
 }: Readonly<IContainerToasts>): JSX.Element | null {
   const { groupedToasts, mounted, toasts } = useContainerToasts({ limit })
 
@@ -32,13 +37,20 @@ export function ContainerToasts({
           : toastsGroup
 
         return createPortal(
-          <ToastWrapper
+          <div
             key={position}
-            style={toastWrapperStyle}
-            $positionStyle={getPositionStyle(position as ToastPosition, margin)}
+            className={clsx(
+              'toast-wrapper',
+              `toast-position-${position}`,
+              wrapperClassName,
+            )}
+            style={margin !== 16 ? { padding: `${margin}px` } : undefined}
           >
             {sortedToasts.map((toast) => (
-              <ToastItemWrapper key={toast.id} style={toastItemWrapperStyle}>
+              <div
+                key={toast.id}
+                className={clsx('toast-item-wrapper', itemClassName)}
+              >
                 <ContainerToast
                   {...toast}
                   autoClose={toast.autoClose ?? autoClose}
@@ -48,10 +60,16 @@ export function ContainerToasts({
                     toastManager.remove(toast.id)
                     toast.onClose?.()
                   }}
+                  className={className}
+                  iconClassName={iconClassName}
+                  contentClassName={contentClassName}
+                  titleClassName={titleClassName}
+                  descriptionClassName={descriptionClassName}
+                  closeButtonClassName={closeButtonClassName}
                 />
-              </ToastItemWrapper>
+              </div>
             ))}
-          </ToastWrapper>,
+          </div>,
           document.body,
         )
       })}

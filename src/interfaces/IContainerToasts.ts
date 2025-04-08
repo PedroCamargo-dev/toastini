@@ -1,6 +1,6 @@
 import { IToastContainer } from './IToastContainer'
-import { IToastStyles } from './IToastStyles'
+import { IToastClassNames } from './IToastClassNames'
 
 export interface IContainerToasts
   extends Omit<IToastContainer, 'id'>,
-    IToastStyles {}
+    IToastClassNames {}

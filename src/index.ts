@@ -1,5 +1,4 @@
-export * from '@/styles/theme'
-export * from '@/context'
+export * from '@/providers'
 export * from '@/components'
 export * from '@/interfaces'
 export * from '@/lib/toast'

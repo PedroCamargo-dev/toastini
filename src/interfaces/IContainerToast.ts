@@ -1,6 +1,6 @@
 import { IToast } from './IToast'
-import { IToastStyles } from './IToastStyles'
+import { IToastClassNames } from './IToastClassNames'
 
-export interface IContainerToast extends IToast, IToastStyles {
+export interface IContainerToast extends IToast, IToastClassNames {
   onRemove: () => void
 }
