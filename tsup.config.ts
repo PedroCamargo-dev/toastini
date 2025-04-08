@@ -12,4 +12,6 @@ export default defineConfig({
   banner: {
     js: '"use client";',
   },
+  treeshake: true,
+  splitting: true,
 })
