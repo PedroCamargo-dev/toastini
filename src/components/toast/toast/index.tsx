@@ -4,7 +4,6 @@ import { useContainerToast } from '@/hooks'
 import { TOAST_ICONS } from '@/constants'
 import { X } from '@/components/icons'
 import type { IContainerToast } from '@/interfaces'
-import '@/styles/styles.css'
 
 export function ContainerToast({
   title,

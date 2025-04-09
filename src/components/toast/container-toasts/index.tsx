@@ -5,7 +5,6 @@ import { toastManager } from '@/lib/core'
 import { useContainerToasts } from '@/hooks'
 import { IContainerToasts } from '@/interfaces/IContainerToasts'
 import { ContainerToast } from '../toast'
-import '@/styles/styles.css'
 
 export function ContainerToasts({
   autoClose = 5000,

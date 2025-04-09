@@ -1,17 +1,25 @@
 import { ReactNode, useEffect } from 'react'
-import '@/styles/styles.css'
 
 interface ToastProviderProps {
   children: ReactNode
+  theme?: 'light' | 'dark'
 }
 
-export const ToastProvider = ({ children }: ToastProviderProps) => {
+export const ToastProvider = ({ children, theme }: ToastProviderProps) => {
   useEffect(() => {
     const updateTheme = () => {
-      const isDarkMode =
-        document.documentElement.classList.contains('dark') ||
-        (window.matchMedia('(prefers-color-scheme: dark)').matches &&
-          !document.documentElement.classList.contains('light'))
+      let isDarkMode: boolean
+
+      if (theme === 'dark') {
+        isDarkMode = true
+      } else if (theme === 'light') {
+        isDarkMode = false
+      } else {
+        isDarkMode =
+          document.documentElement.classList.contains('dark') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches &&
+            !document.documentElement.classList.contains('light'))
+      }
 
       document.documentElement.setAttribute(
         'data-theme',
@@ -40,7 +48,7 @@ export const ToastProvider = ({ children }: ToastProviderProps) => {
       observer.disconnect()
       mediaQuery.removeEventListener('change', handleMediaChange)
     }
-  }, [])
+  }, [theme])
 
   return <>{children}</>
 }

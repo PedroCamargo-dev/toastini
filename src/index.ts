@@ -1,3 +1,4 @@
+import '@/styles/styles.css'
 export * from '@/providers'
 export * from '@/components'
 export * from '@/interfaces'
