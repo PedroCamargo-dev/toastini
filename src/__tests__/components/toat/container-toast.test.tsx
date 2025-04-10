@@ -1,42 +1,26 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { ContainerToast } from '@/components/toast/toast/container-toast'
+import { ContainerToast } from '@/components'
 import { useContainerToast } from '@/hooks'
-import { ToastProvider } from '@/context'
+import { ToastProvider } from '@/providers'
+
+beforeAll(() => {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  })
+})
 
 jest.mock('@/hooks', () => ({
   useContainerToast: jest.fn(),
 }))
-
-const mockTheme = {
-  colors: {
-    default: {
-      background: '#fff',
-      border: '#ccc',
-      text: '#000',
-    },
-    success: {
-      background: '#d4edda',
-      border: '#c3e6cb',
-      text: '#155724',
-    },
-    error: {
-      background: '#f8d7da',
-      border: '#f5c6cb',
-      text: '#721c24',
-    },
-    info: {
-      background: '#d1ecf1',
-      border: '#bee5eb',
-      text: '#0c5460',
-    },
-    warning: {
-      background: '#fff3cd',
-      border: '#ffeeba',
-      text: '#856404',
-    },
-  },
-}
 
 describe('ContainerToast', () => {
   const mockHandleClick = jest.fn()
@@ -60,14 +44,11 @@ describe('ContainerToast', () => {
     })
   })
 
-  const renderWithMockTheme = (ui: React.ReactElement) =>
-    render(<ToastProvider customTheme={mockTheme}>{ui}</ToastProvider>)
-
-  const renderWithoutMockTheme = (ui: React.ReactElement) =>
+  const renderProvider = (ui: React.ReactElement) =>
     render(<ToastProvider>{ui}</ToastProvider>)
 
   test('renders with default props (with theme)', () => {
-    renderWithMockTheme(
+    renderProvider(
       <ContainerToast
         id="test-toast-1"
         title="Test Toast"
@@ -81,7 +62,7 @@ describe('ContainerToast', () => {
   })
 
   test('renders with default props', () => {
-    renderWithMockTheme(
+    renderProvider(
       <ContainerToast
         id="test-toast-1"
         title="Test Toast"
@@ -101,15 +82,13 @@ describe('ContainerToast', () => {
   })
 
   test('renders without title or description', () => {
-    renderWithMockTheme(
-      <ContainerToast id="test-toast-2" onRemove={jest.fn()} />,
-    )
+    renderProvider(<ContainerToast id="test-toast-2" onRemove={jest.fn()} />)
 
     expect(screen.queryByRole('heading')).not.toBeInTheDocument()
   })
 
   test('renders with custom type', () => {
-    renderWithMockTheme(
+    renderProvider(
       <ContainerToast
         id="test-toast-3"
         type="success"
@@ -122,7 +101,7 @@ describe('ContainerToast', () => {
   })
 
   test('handles click events', () => {
-    renderWithMockTheme(
+    renderProvider(
       <ContainerToast
         id="test-toast-4"
         title="Test Toast"
@@ -135,7 +114,7 @@ describe('ContainerToast', () => {
   })
 
   test('handles mouse events for dragging', () => {
-    renderWithMockTheme(
+    renderProvider(
       <ContainerToast
         id="test-toast-5"
         title="Draggable Toast"
@@ -159,7 +138,7 @@ describe('ContainerToast', () => {
   })
 
   test('close button triggers remove', () => {
-    renderWithMockTheme(
+    renderProvider(
       <ContainerToast
         id="test-toast-4"
         title="Test Toast"
@@ -174,16 +153,11 @@ describe('ContainerToast', () => {
   })
 
   test('applies custom styles', () => {
-    const customStyles = {
-      backgroundColor: 'red',
-      color: 'white',
-    }
-
-    renderWithMockTheme(
+    renderProvider(
       <ContainerToast
         id="test-toast-6"
         title="Styled Toast"
-        toastContainerWrapperStyle={customStyles}
+        className="custom-toast"
         onRemove={jest.fn()}
       />,
     )
@@ -206,7 +180,7 @@ describe('ContainerToast', () => {
       triggerRemove: mockTriggerRemove,
     })
 
-    renderWithMockTheme(
+    renderProvider(
       <ContainerToast
         id="test-toast-7"
         title="Test Toast"
@@ -220,7 +194,7 @@ describe('ContainerToast', () => {
   })
 
   test('renders with default theme (without customTheme)', () => {
-    renderWithoutMockTheme(
+    renderProvider(
       <ContainerToast
         id="test-toast-default"
         title="Default Theme Toast"

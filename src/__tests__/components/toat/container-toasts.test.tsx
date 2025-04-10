@@ -1,20 +1,37 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { createPortal } from 'react-dom'
-import { ThemeProvider } from 'styled-components'
 import { toastManager } from '@/lib/core'
 import { useContainerToast, useContainerToasts } from '@/hooks'
-import { ContainerToasts } from '@/components'
-import { lightTheme } from '@/styles/theme'
 import { IContainerToast } from '@/interfaces'
+import { ToastProvider } from '@/providers/toast'
+import { ContainerToasts } from '@/components/toast/container-toasts'
 
 const toastsStore = new Map()
 
-jest.mock('@/components/toast/toast/container-toast', () => {
+beforeAll(() => {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  })
+})
+
+jest.mock('@/components/toast/toast', () => {
   return {
     __esModule: true,
     ContainerToast: (props: IContainerToast) => {
       const id = props.id ?? 'unknown'
       const description = props.description ?? 'No description'
+
+      setTimeout(() => {
+        props.onRemove?.()
+      }, 0)
 
       return <div data-testid={`toast-${id}`}>{description}</div>
     },
@@ -52,9 +69,6 @@ jest.mock('@/lib/core', () => ({
   },
 }))
 
-const renderWithTheme = (ui: React.ReactElement) =>
-  render(<ThemeProvider theme={lightTheme}>{ui}</ThemeProvider>)
-
 describe('ContainerToasts', () => {
   beforeEach(() => {
     jest.clearAllMocks()
@@ -65,6 +79,9 @@ describe('ContainerToasts', () => {
     })
   })
 
+  const renderProvider = (ui: React.ReactElement) =>
+    render(<ToastProvider>{ui}</ToastProvider>)
+
   it('renders nothing if not mounted or no toasts', () => {
     ;(useContainerToasts as jest.Mock).mockReturnValue({
       groupedToasts: {},
@@ -72,7 +89,7 @@ describe('ContainerToasts', () => {
       toasts: [],
     })
 
-    const { container } = renderWithTheme(<ContainerToasts />)
+    const { container } = renderProvider(<ContainerToasts />)
     expect(container.firstChild).toBeNull()
   })
 
@@ -91,7 +108,7 @@ describe('ContainerToasts', () => {
       ],
     })
 
-    renderWithTheme(<ContainerToasts />)
+    renderProvider(<ContainerToasts />)
 
     expect(screen.getByTestId('toast-1')).toHaveTextContent('Toast 1')
     expect(screen.getByTestId('toast-2')).toHaveTextContent('Toast 2')
@@ -129,7 +146,7 @@ describe('ContainerToasts', () => {
       ],
     })
 
-    renderWithTheme(<ContainerToasts />)
+    renderProvider(<ContainerToasts />)
 
     const toast = screen.getByTestId('toast-1')
     expect(toast).toBeInTheDocument()
@@ -154,7 +171,7 @@ describe('ContainerToasts', () => {
       ],
     })
 
-    renderWithTheme(<ContainerToasts newestOnTop />)
+    renderProvider(<ContainerToasts newestOnTop />)
 
     const toastElements = screen.getAllByTestId(/toast-/)
     expect(toastElements[0]).toHaveTextContent('Toast 2')
@@ -170,11 +187,10 @@ describe('ContainerToasts', () => {
       toasts: [{ id: '1', description: 'Toast' }],
     })
 
-    const customStyle = { padding: '20px' }
-    renderWithTheme(<ContainerToasts toastItemWrapperStyle={customStyle} />)
+    renderProvider(<ContainerToasts itemClassName="custom-class" />)
 
-    const item = screen.getByTestId('toast-1').parentElement
-    expect(item).toHaveStyle('padding: 20px')
+    const wrapper = screen.getByTestId('toast-1').parentElement
+    expect(wrapper).toHaveClass('custom-class')
   })
 
   it('limits toasts when limit prop is provided', () => {
@@ -195,12 +211,91 @@ describe('ContainerToasts', () => {
       }
     })
 
-    renderWithTheme(<ContainerToasts limit={2} />)
+    renderProvider(<ContainerToasts limit={2} />)
 
     const toasts = screen.getAllByTestId(/toast-/)
     expect(toasts).toHaveLength(2)
     expect(screen.getByTestId('toast-1')).toBeInTheDocument()
     expect(screen.getByTestId('toast-2')).toBeInTheDocument()
     expect(screen.queryByTestId('toast-3')).not.toBeInTheDocument()
+  })
+
+  it('removes toast on close and calls onClose', async () => {
+    const mockOnClose = jest.fn()
+    const mockRemove = jest.fn((id) => {
+      const toast = toastsStore.get(id)
+      toast?.onClose?.()
+      toastsStore.delete(id)
+    })
+
+    toastsStore.set('1', {
+      id: '1',
+      description: 'Toast 1',
+      autoClose: 5000,
+      onClose: mockOnClose,
+    })
+    ;(useContainerToasts as jest.Mock).mockReturnValue({
+      groupedToasts: {
+        topRight: [
+          {
+            id: '1',
+            description: 'Toast 1',
+            autoClose: 5000,
+            onClose: mockOnClose,
+          },
+        ],
+      },
+      mounted: true,
+      toasts: [
+        {
+          id: '1',
+          description: 'Toast 1',
+          autoClose: 5000,
+          onClose: mockOnClose,
+        },
+      ],
+    })
+
+    toastManager.remove = mockRemove
+
+    renderProvider(<ContainerToasts />)
+
+    const toast = screen.getByText('Toast 1')
+    expect(toast).toBeInTheDocument()
+
+    await waitFor(() => {
+      expect(mockRemove).toHaveBeenCalledWith('1')
+      expect(mockOnClose).toHaveBeenCalled()
+    })
+  })
+
+  it('skips rendering for empty toast groups', () => {
+    ;(useContainerToasts as jest.Mock).mockReturnValue({
+      groupedToasts: {
+        topRight: [],
+      },
+      mounted: true,
+      toasts: [{ id: '1', description: 'Toast 1' }],
+    })
+
+    const { container } = renderProvider(<ContainerToasts />)
+    expect(container.querySelector('.toast-position-topRight')).toBeNull()
+  })
+
+  it('applies custom margin style when margin is not default', () => {
+    ;(useContainerToasts as jest.Mock).mockReturnValue({
+      groupedToasts: {
+        topRight: [{ id: '1', description: 'Toast 1' }],
+      },
+      mounted: true,
+      toasts: [{ id: '1', description: 'Toast 1' }],
+    })
+
+    renderProvider(<ContainerToasts margin={24} />)
+
+    const wrapper = screen
+      .getByTestId('toast-1')
+      .closest('.toast-position-topRight')
+    expect(wrapper).toHaveStyle({ padding: '24px' })
   })
 })
