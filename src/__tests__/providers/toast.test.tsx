@@ -48,7 +48,6 @@ describe('ToastProvider', () => {
       </ToastProvider>,
     )
 
-    // Força a chamada para cobrir a linha
     const systemPref = window.matchMedia('(prefers-color-scheme: dark)').matches
       ? 'dark'
       : 'light'
