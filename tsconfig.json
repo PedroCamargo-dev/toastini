@@ -14,7 +14,7 @@
     "baseUrl": "src",
     "paths": {
       "@/*": ["./*"],
-      "@/context/*": ["./context/*"],
+      "@/providers/*": ["./providers/*"],
       "@/components/*": ["./components/*"],
       "@/interfaces/*": ["./interfaces/*"],
       "@/lib/*": ["./lib/*"],

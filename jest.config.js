@@ -3,7 +3,7 @@ module.exports = {
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@/context/(.*)$': '<rootDir>/src/context/$1',
+    '^@/providers/(.*)$': '<rootDir>/src/providers/$1',
     '^@/components/(.*)$': '<rootDir>/src/components/$1',
     '^@/interfaces/(.*)$': '<rootDir>/src/interfaces/$1',
     '^@/lib/(.*)$': '<rootDir>/src/lib/$1',
