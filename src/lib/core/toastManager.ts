@@ -26,7 +26,7 @@ class ToastManager {
     this.toasts = [...this.toasts, newToast]
     this.notify()
 
-    if (toast.autoClose !== false) {
+    if (toast.autoClose === true || typeof toast.autoClose === 'number') {
       const timeout =
         typeof toast.autoClose === 'number' ? toast.autoClose : 5000
       setTimeout(() => this.remove(id), timeout)
