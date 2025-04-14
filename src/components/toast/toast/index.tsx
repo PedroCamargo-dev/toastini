@@ -13,6 +13,7 @@ export function ContainerToast({
   draggable = true,
   onRemove,
   position = 'top-right',
+  autoClose,
   className,
   iconClassName,
   contentClassName,
@@ -30,7 +31,13 @@ export function ContainerToast({
     handleMouseMove,
     handleMouseUp,
     triggerRemove,
-  } = useContainerToast({ position, closeOnClick, draggable, onRemove })
+  } = useContainerToast({
+    position,
+    closeOnClick,
+    draggable,
+    autoClose,
+    onRemove,
+  })
 
   return (
     <div

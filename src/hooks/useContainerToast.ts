@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { getInitialOffset, isVertical } from '@/utils'
 
 interface IUseContainerToast {
   position: string
   closeOnClick: boolean
   draggable: boolean
+  autoClose?: boolean | number
   onRemove: () => void
 }
 
@@ -12,6 +13,7 @@ const useContainerToast = ({
   position,
   closeOnClick,
   draggable,
+  autoClose,
   onRemove,
 }: IUseContainerToast) => {
   const toastRef = useRef<HTMLDivElement>(null)
@@ -33,7 +35,7 @@ const useContainerToast = ({
     return () => clearTimeout(t)
   }, [])
 
-  const triggerRemove = () => {
+  const triggerRemove = useCallback(() => {
     if (isExiting) return
     setIsExiting(true)
 
@@ -52,7 +54,21 @@ const useContainerToast = ({
     }, 300)
 
     return () => clearTimeout(exitTimer)
-  }
+  }, [isExiting, vertical, position, onRemove])
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null
+
+    if (autoClose && typeof autoClose === 'number' && autoClose > 0) {
+      timer = setTimeout(() => {
+        triggerRemove()
+      }, autoClose)
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
+  }, [autoClose])
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!draggable) return

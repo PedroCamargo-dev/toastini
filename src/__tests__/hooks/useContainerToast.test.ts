@@ -112,4 +112,63 @@ describe('useContainerToast', () => {
 
     expect(onRemoveMock).toHaveBeenCalled()
   })
+
+  it('should not trigger remove if already exiting', () => {
+    const onRemoveMock = jest.fn()
+    const { result } = renderHook(() =>
+      useContainerToast({
+        position: 'top-right',
+        closeOnClick: false,
+        draggable: false,
+        onRemove: onRemoveMock,
+      }),
+    )
+
+    act(() => {
+      result.current.triggerRemove()
+      result.current.triggerRemove()
+    })
+
+    expect(onRemoveMock).toHaveBeenCalledTimes(0)
+  })
+
+  it('should set drag and opacity correctly when triggerRemove is called', () => {
+    const onRemoveMock = jest.fn()
+    const { result } = renderHook(() =>
+      useContainerToast({
+        position: 'top-right',
+        closeOnClick: false,
+        draggable: false,
+        onRemove: onRemoveMock,
+      }),
+    )
+
+    act(() => {
+      result.current.triggerRemove()
+    })
+
+    expect(result.current.opacity).toBe(0)
+    expect(result.current.transform).toContain('translate')
+  })
+
+  it('should call onRemove after the exit animation', () => {
+    jest.useFakeTimers()
+    const onRemoveMock = jest.fn()
+    const { result } = renderHook(() =>
+      useContainerToast({
+        position: 'top-right',
+        closeOnClick: false,
+        draggable: false,
+        onRemove: onRemoveMock,
+      }),
+    )
+
+    act(() => {
+      result.current.triggerRemove()
+      jest.advanceTimersByTime(300)
+    })
+
+    expect(onRemoveMock).toHaveBeenCalled()
+    jest.useRealTimers()
+  })
 })
