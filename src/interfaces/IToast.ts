@@ -1,6 +1,10 @@
 import { ToastPosition, ToastType } from '@/types'
+import { IToastClassNames } from './IToastClassNames'
+import { IToastStyles } from './IToastStyles'
 
-export interface IToast {
+export interface IToast
+  extends Omit<IToastClassNames, 'wrapperClassName' | 'itemClassName'>,
+    IToastStyles {
   id: string
   title?: string
   description?: React.ReactNode

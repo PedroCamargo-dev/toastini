@@ -59,12 +59,21 @@ export function ContainerToasts({
                     toastManager.remove(toast.id)
                     toast.onClose?.()
                   }}
-                  className={className}
-                  iconClassName={iconClassName}
-                  contentClassName={contentClassName}
-                  titleClassName={titleClassName}
-                  descriptionClassName={descriptionClassName}
-                  closeButtonClassName={closeButtonClassName}
+                  className={clsx(className, toast.className)}
+                  iconClassName={clsx(iconClassName, toast.iconClassName)}
+                  contentClassName={clsx(
+                    contentClassName,
+                    toast.contentClassName,
+                  )}
+                  titleClassName={clsx(titleClassName, toast.titleClassName)}
+                  descriptionClassName={clsx(
+                    descriptionClassName,
+                    toast.descriptionClassName,
+                  )}
+                  closeButtonClassName={clsx(
+                    closeButtonClassName,
+                    toast.closeButtonClassName,
+                  )}
                 />
               </div>
             ))}

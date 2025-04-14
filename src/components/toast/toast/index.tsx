@@ -20,6 +20,12 @@ export function ContainerToast({
   titleClassName,
   descriptionClassName,
   closeButtonClassName,
+  style,
+  iconStyle,
+  contentStyle,
+  titleStyle,
+  descriptionStyle,
+  closeButtonStyle,
 }: Readonly<IContainerToast>) {
   const {
     toastRef,
@@ -57,18 +63,33 @@ export function ContainerToast({
       style={{
         transform,
         opacity,
+        ...style,
       }}
       aria-hidden
     >
-      <div className={clsx('toast-icon-wrapper', iconClassName)}>
+      <div
+        className={clsx('toast-icon-wrapper', iconClassName)}
+        style={{ ...iconStyle }}
+      >
         {TOAST_ICONS[type]}
       </div>
-      <div className={clsx('toast-content-wrapper', contentClassName)}>
+      <div
+        className={clsx('toast-content-wrapper', contentClassName)}
+        style={{ ...contentStyle }}
+      >
         {title && (
-          <h3 className={clsx('toast-title', titleClassName)}>{title}</h3>
+          <h3
+            className={clsx('toast-title', titleClassName)}
+            style={{ ...titleStyle }}
+          >
+            {title}
+          </h3>
         )}
         {description && (
-          <div className={clsx('toast-description', descriptionClassName)}>
+          <div
+            className={clsx('toast-description', descriptionClassName)}
+            style={{ ...descriptionStyle }}
+          >
             {description}
           </div>
         )}
@@ -83,6 +104,7 @@ export function ContainerToast({
           e.stopPropagation()
           triggerRemove()
         }}
+        style={{ ...closeButtonStyle }}
       >
         <X />
       </button>
