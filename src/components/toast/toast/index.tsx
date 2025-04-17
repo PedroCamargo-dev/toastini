@@ -43,6 +43,7 @@ export function ContainerToast({
     draggable,
     autoClose,
     onRemove,
+    type,
   })
 
   return (

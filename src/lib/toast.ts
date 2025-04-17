@@ -16,4 +16,46 @@ export const toast = {
   removeAll: () => toastManager.removeAll(),
   default: (title: string, options?: Partial<ToastOptions>) =>
     toastManager.show({ title, type: 'default', ...options }),
+  promise: async <T = unknown, R = Error>(
+    promise: Promise<T>,
+    {
+      loading = 'Carregando...',
+      success = 'Operação concluída!',
+      error = 'Ocorreu um erro!',
+      options = {},
+    }: {
+      loading?: string
+      success?: string | ((data: T) => string)
+      error?: string | ((error: R) => string)
+      options?: Partial<ToastOptions>
+    } = {},
+  ): Promise<T> => {
+    const toastId = toastManager.show({
+      title: loading,
+      type: 'promise',
+      ...options,
+    })
+
+    try {
+      const data = await promise
+      const successMessage =
+        typeof success === 'function' ? success(data) : success
+      toastManager.update(toastId, {
+        title: successMessage,
+        type: 'success',
+        ...options,
+      })
+      return data
+    } catch (err) {
+      const typedError = err as R
+      const errorMessage =
+        typeof error === 'function' ? error(typedError) : error
+      toastManager.update(toastId, {
+        title: errorMessage,
+        type: 'error',
+        ...options,
+      })
+      throw typedError
+    }
+  },
 }

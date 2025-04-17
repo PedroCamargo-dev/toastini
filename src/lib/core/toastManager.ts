@@ -46,6 +46,13 @@ class ToastManager {
   getToasts() {
     return this.toasts
   }
+
+  update(id: string, updates: Partial<IToast>) {
+    this.toasts = this.toasts.map((toast) =>
+      toast.id === id ? { ...toast, ...updates } : toast,
+    )
+    this.notify()
+  }
 }
 
 export const toastManager = new ToastManager()

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { getInitialOffset, isVertical } from '@/utils'
+import { ToastType } from '@/types'
 
 interface IUseContainerToast {
   position: string
@@ -7,6 +8,7 @@ interface IUseContainerToast {
   draggable: boolean
   autoClose?: boolean | number
   onRemove: () => void
+  type?: ToastType
 }
 
 const useContainerToast = ({
@@ -15,6 +17,7 @@ const useContainerToast = ({
   draggable,
   autoClose,
   onRemove,
+  type,
 }: IUseContainerToast) => {
   const toastRef = useRef<HTMLDivElement>(null)
   const vertical = isVertical(position)
@@ -59,7 +62,12 @@ const useContainerToast = ({
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | null = null
 
-    if (autoClose && typeof autoClose === 'number' && autoClose > 0) {
+    if (
+      type !== 'promise' &&
+      autoClose &&
+      typeof autoClose === 'number' &&
+      autoClose > 0
+    ) {
       timer = setTimeout(() => {
         triggerRemove()
       }, autoClose)
@@ -68,7 +76,26 @@ const useContainerToast = ({
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [autoClose])
+  }, [autoClose, type, triggerRemove])
+
+  useEffect(() => {
+    let promiseTimer: ReturnType<typeof setTimeout> | null = null
+
+    if (
+      type === 'promise' &&
+      autoClose &&
+      typeof autoClose === 'number' &&
+      autoClose > 0
+    ) {
+      promiseTimer = setTimeout(() => {
+        triggerRemove()
+      }, autoClose)
+    }
+
+    return () => {
+      if (promiseTimer) clearTimeout(promiseTimer)
+    }
+  }, [type, autoClose, triggerRemove])
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!draggable) return

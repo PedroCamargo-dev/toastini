@@ -4,6 +4,7 @@ import {
   Info,
   TriangleCircle,
 } from '@/components/icons'
+import { LoaderCircle } from '@/components/icons/loader-circle'
 import { ToastPosition } from '@/types'
 
 const TOAST_ICONS = {
@@ -12,6 +13,7 @@ const TOAST_ICONS = {
   info: <Info color="#3b82f6" />,
   warning: <TriangleCircle color="#f59e0b" />,
   default: <Info color="#6b7280" />,
+  promise: <LoaderCircle color="#6b7280" />,
 }
 
 const DEFAULT_POSITION: ToastPosition = 'top-right'

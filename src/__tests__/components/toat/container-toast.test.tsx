@@ -78,6 +78,7 @@ describe('ContainerToast', () => {
       closeOnClick: true,
       draggable: true,
       onRemove: expect.any(Function),
+      type: 'default',
     })
   })
 

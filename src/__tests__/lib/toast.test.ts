@@ -84,4 +84,96 @@ describe('toast', () => {
 
     expect(toastManager.removeAll).toHaveBeenCalled()
   })
+
+  it('should call toastManager.update with success info when promise resolves', async () => {
+    ;(toastManager as jest.Mocked<typeof toastManager>).update = jest.fn()
+
+    const promise = Promise.resolve('data')
+    const result = await toast.promise(promise)
+
+    expect(toastManager.show).toHaveBeenCalledWith({
+      title: 'Carregando...',
+      type: 'promise',
+    })
+
+    expect(toastManager.update).toHaveBeenCalledWith(
+      undefined,
+      expect.objectContaining({
+        title: 'Operação concluída!',
+        type: 'success',
+      }),
+    )
+
+    expect(result).toBe('data')
+  })
+
+  it('should call toastManager.update with error info when promise rejects', async () => {
+    ;(toastManager as jest.Mocked<typeof toastManager>).update = jest.fn()
+    const testError = new Error('Test error')
+    const promise = Promise.reject(testError)
+
+    await expect(toast.promise(promise)).rejects.toThrow(testError)
+
+    expect(toastManager.show).toHaveBeenCalledWith({
+      title: 'Carregando...',
+      type: 'promise',
+    })
+
+    expect(toastManager.update).toHaveBeenCalledWith(
+      undefined,
+      expect.objectContaining({
+        title: 'Ocorreu um erro!',
+        type: 'error',
+      }),
+    )
+  })
+
+  it('should accept custom messages for promise toast', async () => {
+    ;(toastManager as jest.Mocked<typeof toastManager>).update = jest.fn()
+    const promise = Promise.resolve({ name: 'Test' })
+
+    await toast.promise(promise, {
+      loading: 'Custom loading',
+      success: (data) => `Success with ${data.name}`,
+      error: 'Custom error',
+      options: { autoClose: 5000 },
+    })
+
+    expect(toastManager.show).toHaveBeenCalledWith({
+      title: 'Custom loading',
+      type: 'promise',
+      autoClose: 5000,
+    })
+
+    expect(toastManager.update).toHaveBeenCalledWith(
+      undefined,
+      expect.objectContaining({
+        title: 'Success with Test',
+        type: 'success',
+        autoClose: expect.any(Number),
+      }),
+    )
+  })
+
+  it('should use custom error function when promise rejects', async () => {
+    ;(toastManager as jest.Mocked<typeof toastManager>).update = jest.fn()
+    const testError = new Error('Test error message')
+    const promise = Promise.reject(testError)
+
+    try {
+      await toast.promise(promise, {
+        error: (err) => `Error: ${(err as Error).message}`,
+      })
+    } catch {
+      //
+    }
+
+    expect(toastManager.update).toHaveBeenCalledWith(
+      undefined,
+      expect.objectContaining({
+        title: 'Error: Test error message',
+        type: 'error',
+      }),
+    )
+  })
 })

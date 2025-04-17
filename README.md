@@ -163,6 +163,27 @@ toast.success('Título', {
   descriptionClassName: 'text-sm',
 })
 
+// Trabalhando com Promises
+toast.promise(asyncFunction(), {
+  loading: 'Carregando...',
+  success: 'Operação concluída!',
+  error: 'Ocorreu um erro!',
+  options: {
+    position: 'bottom-right',
+    autoClose: 3000
+  }
+})
+
+// Com funções personalizadas para mensagens dinâmicas
+toast.promise(fetchUserData(userId), {
+  loading: 'Buscando dados do usuário...',
+  success: (data) => `Bem-vindo, ${data.name}!`,
+  error: (err) => `Erro: ${err.message}`,
+  options: {
+    className: 'user-toast'
+  }
+})
+
 // Remover toasts
 toast.remove(id)
 toast.removeAll()

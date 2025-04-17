@@ -109,4 +109,28 @@ describe('ToastManager', () => {
       ]),
     )
   })
+
+  it('should update a toast and notify listeners', () => {
+    const listener = jest.fn()
+    toastManager.subscribe(listener)
+
+    const id = toastManager.show({ title: 'Test Toast' })
+    toastManager.update(id, { title: 'Updated Toast' })
+
+    expect(listener).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({ title: 'Updated Toast' }),
+      ]),
+    )
+  })
+
+  it('should not update a toast if the ID does not exist', () => {
+    const listener = jest.fn()
+    toastManager.subscribe(listener)
+
+    const id = 'non-existent-id'
+    toastManager.update(id, { title: 'Updated Toast' })
+
+    expect(listener).toHaveBeenCalledWith([])
+  })
 })

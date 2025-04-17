@@ -171,4 +171,212 @@ describe('useContainerToast', () => {
     expect(onRemoveMock).toHaveBeenCalled()
     jest.useRealTimers()
   })
+
+  it('should auto close when autoClose is a number and type is not promise', () => {
+    jest.useFakeTimers()
+    const onRemoveMock = jest.fn()
+
+    renderHook(() =>
+      useContainerToast({
+        position: 'top-right',
+        closeOnClick: false,
+        draggable: false,
+        autoClose: 1000,
+        onRemove: onRemoveMock,
+      }),
+    )
+
+    act(() => {
+      jest.advanceTimersByTime(1000)
+      jest.advanceTimersByTime(300)
+    })
+
+    expect(onRemoveMock).toHaveBeenCalled()
+    jest.useRealTimers()
+  })
+
+  it('should auto close when autoClose is a number and type is promise', () => {
+    jest.useFakeTimers()
+    const onRemoveMock = jest.fn()
+
+    renderHook(() =>
+      useContainerToast({
+        position: 'top-right',
+        closeOnClick: false,
+        draggable: false,
+        autoClose: 1000,
+        type: 'promise',
+        onRemove: onRemoveMock,
+      }),
+    )
+
+    act(() => {
+      jest.advanceTimersByTime(1000)
+      jest.advanceTimersByTime(300)
+    })
+
+    expect(onRemoveMock).toHaveBeenCalled()
+    jest.useRealTimers()
+  })
+
+  it('should not auto close when autoClose is false', () => {
+    jest.useFakeTimers()
+    const onRemoveMock = jest.fn()
+
+    renderHook(() =>
+      useContainerToast({
+        position: 'top-right',
+        closeOnClick: false,
+        draggable: false,
+        autoClose: false,
+        onRemove: onRemoveMock,
+      }),
+    )
+
+    act(() => {
+      jest.advanceTimersByTime(5000)
+    })
+
+    expect(onRemoveMock).not.toHaveBeenCalled()
+    jest.useRealTimers()
+  })
+
+  it('should use different initial transforms for different positions', () => {
+    const positions = [
+      'top-right',
+      'top-left',
+      'bottom-right',
+      'bottom-left',
+      'top-center',
+      'bottom-center',
+    ]
+
+    positions.forEach((position) => {
+      const { result } = renderHook(() =>
+        useContainerToast({
+          position,
+          closeOnClick: false,
+          draggable: false,
+          onRemove: jest.fn(),
+        }),
+      )
+
+      expect(result.current.transform).toContain('translate')
+    })
+  })
+
+  it('should remove toast when dragged beyond threshold', async () => {
+    jest.useFakeTimers()
+    const onRemoveMock = jest.fn()
+    const { result } = renderHook(() =>
+      useContainerToast({
+        position: 'top-right',
+        closeOnClick: false,
+        draggable: true,
+        onRemove: onRemoveMock,
+      }),
+    )
+
+    act(() => {
+      jest.advanceTimersByTime(10)
+    })
+
+    act(() => {
+      result.current.handleMouseDown({
+        clientX: 0,
+        clientY: 0,
+      } as React.MouseEvent)
+    })
+
+    act(() => {
+      result.current.handleMouseMove({
+        clientX: 500,
+        clientY: 0,
+      } as React.MouseEvent)
+    })
+
+    act(() => {
+      result.current.handleMouseUp()
+      jest.advanceTimersByTime(300)
+    })
+
+    await waitFor(() => {
+      expect(onRemoveMock).toHaveBeenCalled()
+    })
+
+    jest.useRealTimers()
+  })
+
+  it('should reset drag position when not dragged beyond threshold', () => {
+    const onRemoveMock = jest.fn()
+    const { result } = renderHook(() =>
+      useContainerToast({
+        position: 'top-right',
+        closeOnClick: false,
+        draggable: true,
+        onRemove: onRemoveMock,
+      }),
+    )
+
+    act(() => {
+      result.current.handleMouseDown({
+        clientX: 0,
+        clientY: 0,
+      } as React.MouseEvent)
+    })
+
+    act(() => {
+      result.current.handleMouseMove({
+        clientX: 0,
+        clientY: 100,
+      } as React.MouseEvent)
+    })
+
+    act(() => {
+      result.current.handleMouseUp()
+    })
+
+    expect(onRemoveMock).not.toHaveBeenCalled()
+    expect(result.current.opacity).toBe(1)
+  })
+
+  it('should not respond to mouse events when not draggable', () => {
+    const onRemoveMock = jest.fn()
+    const { result } = renderHook(() =>
+      useContainerToast({
+        position: 'top-right',
+        closeOnClick: false,
+        draggable: false,
+        onRemove: onRemoveMock,
+      }),
+    )
+
+    act(() => {
+      result.current.handleMouseDown({
+        clientX: 0,
+        clientY: 0,
+      } as React.MouseEvent)
+
+      result.current.handleMouseMove({
+        clientX: 100,
+        clientY: 100,
+      } as React.MouseEvent)
+    })
+
+    expect(result.current.isDragging).toBe(false)
+  })
+
+  it('should return a toastRef', () => {
+    const { result } = renderHook(() =>
+      useContainerToast({
+        position: 'top-right',
+        closeOnClick: false,
+        draggable: false,
+        onRemove: jest.fn(),
+      }),
+    )
+
+    expect(result.current.toastRef).toBeDefined()
+    expect(result.current.toastRef.current).toBeNull()
+  })
 })
