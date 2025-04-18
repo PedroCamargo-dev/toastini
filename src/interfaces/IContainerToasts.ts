@@ -1,6 +1,9 @@
-import { IToastContainer } from './IToastContainer'
-import { IToastClassNames } from './IToastClassNames'
+import { IToast } from './IToast'
+import { IToastCustomization } from './IToastCustomization'
 
 export interface IContainerToasts
-  extends Omit<IToastContainer, 'id'>,
-    IToastClassNames {}
+  extends Omit<IToast, 'id'>,
+    IToastCustomization {
+  newestOnTop?: boolean
+  limit?: number
+}

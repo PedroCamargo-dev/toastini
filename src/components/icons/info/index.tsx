@@ -1,32 +1,20 @@
 import React from 'react'
+import { IconBase } from '../base'
 
 interface InfoProps extends React.SVGProps<SVGSVGElement> {
   size?: number
   color?: string
 }
 
-function Info({
-  size = 24,
-  color = 'currentColor',
-  ...props
-}: Readonly<InfoProps>) {
+function Info(
+  props: Omit<React.SVGProps<SVGSVGElement>, 'children'> & InfoProps,
+) {
   return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
+    <IconBase {...props}>
       <circle cx={12} cy={12} r={10} />
       <path d="M12 16v-4" />
       <path d="M12 8h.01" />
-    </svg>
+    </IconBase>
   )
 }
 

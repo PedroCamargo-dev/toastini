@@ -59,43 +59,29 @@ const useContainerToast = ({
     return () => clearTimeout(exitTimer)
   }, [isExiting, vertical, position, onRemove])
 
+  const triggerRemoveRef = useRef(triggerRemove)
+  useEffect(() => {
+    triggerRemoveRef.current = triggerRemove
+  }, [triggerRemove])
+
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | null = null
 
     if (
-      type !== 'promise' &&
       autoClose &&
       typeof autoClose === 'number' &&
-      autoClose > 0
+      autoClose > 0 &&
+      type !== 'promise'
     ) {
       timer = setTimeout(() => {
-        triggerRemove()
+        triggerRemoveRef.current()
       }, autoClose)
     }
 
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [autoClose, type, triggerRemove])
-
-  useEffect(() => {
-    let promiseTimer: ReturnType<typeof setTimeout> | null = null
-
-    if (
-      type === 'promise' &&
-      autoClose &&
-      typeof autoClose === 'number' &&
-      autoClose > 0
-    ) {
-      promiseTimer = setTimeout(() => {
-        triggerRemove()
-      }, autoClose)
-    }
-
-    return () => {
-      if (promiseTimer) clearTimeout(promiseTimer)
-    }
-  }, [type, autoClose, triggerRemove])
+  }, [autoClose, type])
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!draggable) return

@@ -12,7 +12,6 @@ export function ContainerToasts({
   draggable = true,
   newestOnTop = false,
   limit,
-  margin = 16,
   wrapperClassName,
   itemClassName,
   className,
@@ -38,12 +37,8 @@ export function ContainerToasts({
         return createPortal(
           <div
             key={position}
-            className={clsx(
-              'toast-wrapper',
-              `toast-position-${position}`,
-              wrapperClassName,
-            )}
-            style={margin !== 16 ? { padding: `${margin}px` } : undefined}
+            className={clsx('toast-wrapper', wrapperClassName)}
+            data-position={position}
           >
             {sortedToasts.map((toast) => (
               <div

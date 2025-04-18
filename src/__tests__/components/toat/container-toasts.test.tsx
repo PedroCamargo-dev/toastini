@@ -281,21 +281,4 @@ describe('ContainerToasts', () => {
     const { container } = renderProvider(<ContainerToasts />)
     expect(container.querySelector('.toast-position-topRight')).toBeNull()
   })
-
-  it('applies custom margin style when margin is not default', () => {
-    ;(useContainerToasts as jest.Mock).mockReturnValue({
-      groupedToasts: {
-        topRight: [{ id: '1', description: 'Toast 1' }],
-      },
-      mounted: true,
-      toasts: [{ id: '1', description: 'Toast 1' }],
-    })
-
-    renderProvider(<ContainerToasts margin={24} />)
-
-    const wrapper = screen
-      .getByTestId('toast-1')
-      .closest('.toast-position-topRight')
-    expect(wrapper).toHaveStyle({ padding: '24px' })
-  })
 })

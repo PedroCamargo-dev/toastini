@@ -18,6 +18,8 @@
   --toast-default-bg: rgb(249 250 251);
   --toast-default-border: rgb(229 231 235);
   --toast-default-text: rgb(17 24 39);
+  
+  --toast-margin: 16px;
 }
 
 [data-theme="dark"] {
@@ -53,50 +55,22 @@
   max-height: 100vh;
 }
 
+.toast-wrapper[data-position^="top"] { top: var(--toast-margin, 16px); }
+.toast-wrapper[data-position^="bottom"] { bottom: var(--toast-margin, 16px); }
+.toast-wrapper[data-position$="left"] { left: var(--toast-margin, 16px); align-items: flex-start; }
+.toast-wrapper[data-position$="right"] { right: var(--toast-margin, 16px); align-items: flex-end; }
+.toast-wrapper[data-position$="center"] { 
+  left: 50%; 
+  transform: translateX(-50%);
+  align-items: center;
+}
+
 @media screen and (max-width: 768px) {
   .toast-wrapper {
     padding: 0;
     width: 100%;
     flex: 1 1 auto;
   }
-}
-
-.toast-position-top-left {
-  top: 16px;
-  left: 16px;
-  align-items: flex-start;
-}
-
-.toast-position-top-center {
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  align-items: center;
-}
-
-.toast-position-top-right {
-  top: 16px;
-  right: 16px;
-  align-items: flex-end;
-}
-
-.toast-position-bottom-left {
-  bottom: 16px;
-  left: 16px;
-  align-items: flex-start;
-}
-
-.toast-position-bottom-center {
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  align-items: center;
-}
-
-.toast-position-bottom-right {
-  bottom: 16px;
-  right: 16px;
-  align-items: flex-end;
 }
 
 .toast-item-wrapper {

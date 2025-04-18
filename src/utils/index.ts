@@ -26,32 +26,29 @@ function getPositionStyle(
   margin = 16,
 ): React.CSSProperties {
   const value = `${margin}px`
+  const isTop = position.startsWith('top')
+  const isLeft = position.endsWith('left')
+  const isRight = position.endsWith('right')
+  const isCenter = position.endsWith('center')
 
-  switch (position) {
-    case 'top-left':
-      return { top: value, left: value, alignItems: 'flex-start' }
-    case 'top-center':
-      return {
-        top: value,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        alignItems: 'center',
-      }
-    case 'top-right':
-      return { top: value, right: value, alignItems: 'flex-end' }
-    case 'bottom-left':
-      return { bottom: value, left: value, alignItems: 'flex-start' }
-    case 'bottom-center':
-      return {
-        bottom: value,
-        left: '50%',
-        transform: 'translateX(-50%)',
-        alignItems: 'center',
-      }
-    case 'bottom-right':
-    default:
-      return { bottom: value, right: value, alignItems: 'flex-end' }
+  const styles: React.CSSProperties = {}
+
+  if (isTop) styles.top = value
+  else styles.bottom = value
+
+  if (isLeft) {
+    styles.left = value
+    styles.alignItems = 'flex-start'
+  } else if (isRight) {
+    styles.right = value
+    styles.alignItems = 'flex-end'
+  } else if (isCenter) {
+    styles.left = '50%'
+    styles.transform = 'translateX(-50%)'
+    styles.alignItems = 'center'
   }
+
+  return styles
 }
 
 function generateId(): string {
