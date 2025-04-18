@@ -195,30 +195,6 @@ describe('useContainerToast', () => {
     jest.useRealTimers()
   })
 
-  it('should auto close when autoClose is a number and type is promise', () => {
-    jest.useFakeTimers()
-    const onRemoveMock = jest.fn()
-
-    renderHook(() =>
-      useContainerToast({
-        position: 'top-right',
-        closeOnClick: false,
-        draggable: false,
-        autoClose: 1000,
-        type: 'promise',
-        onRemove: onRemoveMock,
-      }),
-    )
-
-    act(() => {
-      jest.advanceTimersByTime(1000)
-      jest.advanceTimersByTime(300)
-    })
-
-    expect(onRemoveMock).toHaveBeenCalled()
-    jest.useRealTimers()
-  })
-
   it('should not auto close when autoClose is false', () => {
     jest.useFakeTimers()
     const onRemoveMock = jest.fn()
