@@ -1,5 +1,5 @@
 import { IToast } from '../interfaces'
-import { ToastOptions } from '../types'
+import { ToastOptions, ToastPromiseOptions } from '../types'
 import { toastManager } from './core/toastManager'
 
 export const toast = {
@@ -23,12 +23,9 @@ export const toast = {
       success = 'Operação concluída!',
       error = 'Ocorreu um erro!',
       options = {},
-    }: {
-      loading?: string
-      success?: string | ((data: T) => string)
-      error?: string | ((error: R) => string)
-      options?: Partial<ToastOptions>
-    } = {},
+      successOptions = {},
+      errorOptions = {},
+    }: ToastPromiseOptions<T, R> = {},
   ): Promise<T> => {
     const toastId = toastManager.show({
       title: loading,
@@ -44,6 +41,7 @@ export const toast = {
         title: successMessage,
         type: 'success',
         ...options,
+        ...successOptions,
       })
       return data
     } catch (err) {
@@ -54,6 +52,7 @@ export const toast = {
         title: errorMessage,
         type: 'error',
         ...options,
+        ...errorOptions,
       })
       throw typedError
     }

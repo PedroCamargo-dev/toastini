@@ -162,7 +162,7 @@ describe('toast', () => {
 
     try {
       await toast.promise(promise, {
-        error: (err) => `Error: ${(err as Error).message}`,
+        error: (err) => `Error: ${err.message}`,
       })
     } catch {
       //
