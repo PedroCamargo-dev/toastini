@@ -11,5 +11,6 @@ export interface IToast
   autoClose?: boolean | number
   closeOnClick?: boolean
   draggable?: boolean
+  showProgressBar?: boolean
   onClose?: () => void
 }

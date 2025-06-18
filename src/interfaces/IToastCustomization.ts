@@ -5,6 +5,7 @@ export interface IToastCustomization {
   titleStyle?: React.CSSProperties
   descriptionStyle?: React.CSSProperties
   closeButtonStyle?: React.CSSProperties
+  progressStyle?: React.CSSProperties
 
   className?: string
   iconClassName?: string
@@ -14,4 +15,5 @@ export interface IToastCustomization {
   closeButtonClassName?: string
   wrapperClassName?: string
   itemClassName?: string
+  progressClassName?: string
 }

@@ -14,18 +14,21 @@ export function ContainerToast({
   onRemove,
   position = 'top-right',
   autoClose,
+  showProgressBar = true,
   className,
   iconClassName,
   contentClassName,
   titleClassName,
   descriptionClassName,
   closeButtonClassName,
+  progressClassName,
   style,
   iconStyle,
   contentStyle,
   titleStyle,
   descriptionStyle,
   closeButtonStyle,
+  progressStyle,
 }: Readonly<IContainerToast>) {
   const {
     toastRef,
@@ -109,6 +112,19 @@ export function ContainerToast({
       >
         <X />
       </button>
+      {showProgressBar &&
+        typeof autoClose === 'number' &&
+        type !== 'promise' && (
+          <span
+            className={clsx('toast-progress', progressClassName)}
+            style={
+              {
+                ...progressStyle,
+                '--toast-progress-duration': `${autoClose}ms`,
+              } as React.CSSProperties
+            }
+          />
+        )}
     </div>
   )
 }

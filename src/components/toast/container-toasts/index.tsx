@@ -20,6 +20,7 @@ export function ContainerToasts({
   titleClassName,
   descriptionClassName,
   closeButtonClassName,
+  progressClassName,
 }: Readonly<IContainerToasts>): JSX.Element | null {
   const { groupedToasts, mounted, toasts } = useContainerToasts({ limit })
 
@@ -69,6 +70,11 @@ export function ContainerToasts({
                     closeButtonClassName,
                     toast.closeButtonClassName,
                   )}
+                  progressClassName={clsx(
+                    progressClassName,
+                    toast.progressClassName,
+                  )}
+                  showProgressBar={toast.showProgressBar ?? true}
                 />
               </div>
             ))}
