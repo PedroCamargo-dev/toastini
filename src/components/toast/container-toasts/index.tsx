@@ -12,6 +12,7 @@ export function ContainerToasts({
   draggable = true,
   newestOnTop = false,
   limit,
+  showProgressBar,
   wrapperClassName,
   itemClassName,
   className,
@@ -74,7 +75,7 @@ export function ContainerToasts({
                     progressClassName,
                     toast.progressClassName,
                   )}
-                  showProgressBar={toast.showProgressBar ?? true}
+                  showProgressBar={toast.showProgressBar ?? showProgressBar}
                 />
               </div>
             ))}
