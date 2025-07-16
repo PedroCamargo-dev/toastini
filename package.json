@@ -18,6 +18,7 @@
     "test:coverage:watch": "jest --coverage --watch",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
     "build": "tsup src/index.ts --format esm,cjs --dts",
+    "dev:playground": "npm run dev -w playground",
     "lint-staged": "lint-staged",
     "prepare": "husky && npm run build"
   },
@@ -31,6 +32,9 @@
   },
   "author": "Pedro Camargo <pedrocamargo3008@gmail.com>",
   "license": "MIT",
+  "workspaces": [
+    "playground"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PedroCamargo-dev/toastini.git"

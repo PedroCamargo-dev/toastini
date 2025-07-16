@@ -28,6 +28,7 @@ describe('ContainerToast', () => {
   const mockHandleMouseMove = jest.fn()
   const mockHandleMouseUp = jest.fn()
   const mockTriggerRemove = jest.fn()
+  const mockUnfreeze = jest.fn()
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -41,6 +42,7 @@ describe('ContainerToast', () => {
       handleMouseMove: mockHandleMouseMove,
       handleMouseUp: mockHandleMouseUp,
       triggerRemove: mockTriggerRemove,
+      unfreeze: mockUnfreeze,
     })
   })
 
@@ -79,6 +81,7 @@ describe('ContainerToast', () => {
       draggable: true,
       onRemove: expect.any(Function),
       type: 'default',
+      actions: undefined,
     })
   })
 
@@ -208,5 +211,52 @@ describe('ContainerToast', () => {
     expect(
       screen.getByText('This toast uses the default theme'),
     ).toBeInTheDocument()
+  })
+
+  test('renders with actions and handles action click', () => {
+    const mockActionClick = jest.fn()
+    const actions = [{ label: 'Click Me', onClick: mockActionClick }]
+
+    renderProvider(
+      <ContainerToast
+        id="test-toast-actions"
+        title="Toast With Actions"
+        actions={actions}
+        onRemove={jest.fn()}
+      />,
+    )
+
+    const actionButton = screen.getByText('Click Me')
+    expect(actionButton).toBeInTheDocument()
+
+    fireEvent.click(actionButton)
+
+    expect(mockUnfreeze).toHaveBeenCalledTimes(1)
+    expect(mockActionClick).toHaveBeenCalledTimes(1)
+  })
+
+  test('renders action buttons with variants', () => {
+    const actions = [
+      { label: 'Success', variant: 'success' as const },
+      { label: 'Error', variant: 'error' as const },
+      { label: 'Default' },
+    ]
+
+    renderProvider(
+      <ContainerToast
+        id="test-toast-variants"
+        title="Toast With Action Variants"
+        actions={actions}
+        onRemove={jest.fn()}
+      />,
+    )
+
+    const successButton = screen.getByText('Success')
+    const errorButton = screen.getByText('Error')
+    const defaultButton = screen.getByText('Default')
+
+    expect(successButton).toHaveClass('toast-action-button-success')
+    expect(errorButton).toHaveClass('toast-action-button-error')
+    expect(defaultButton).toHaveClass('toast-action-button-default')
   })
 })

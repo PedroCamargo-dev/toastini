@@ -15,6 +15,7 @@ export function ContainerToast({
   position = 'top-right',
   autoClose,
   showProgressBar = true,
+  actions,
   className,
   iconClassName,
   contentClassName,
@@ -40,6 +41,7 @@ export function ContainerToast({
     handleMouseMove,
     handleMouseUp,
     triggerRemove,
+    unfreeze,
   } = useContainerToast({
     position,
     closeOnClick,
@@ -47,6 +49,7 @@ export function ContainerToast({
     autoClose,
     onRemove,
     type,
+    actions,
   })
 
   return (
@@ -97,6 +100,29 @@ export function ContainerToast({
             {description}
           </div>
         )}
+        {actions?.length && (
+          <div className="toast-actions">
+            {actions.map(
+              ({ label, onClick, variant = 'default', ...rest }, index) => (
+                <button
+                  {...rest}
+                  key={index}
+                  className={clsx(
+                    'toast-action-button',
+                    `toast-action-button-${variant}`,
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    unfreeze()
+                    onClick?.(e)
+                  }}
+                >
+                  {label}
+                </button>
+              ),
+            )}
+          </div>
+        )}
       </div>
       <button
         className={clsx(
@@ -106,6 +132,7 @@ export function ContainerToast({
         )}
         onClick={(e) => {
           e.stopPropagation()
+          unfreeze()
           triggerRemove()
         }}
         style={{ ...closeButtonStyle }}

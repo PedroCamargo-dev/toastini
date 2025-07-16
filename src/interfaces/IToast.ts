@@ -1,4 +1,5 @@
 import { ToastPosition, ToastType } from '@/types'
+import { IToastAction } from './IToastAction'
 import { IToastCustomization } from './IToastCustomization'
 
 export interface IToast
@@ -13,4 +14,5 @@ export interface IToast
   draggable?: boolean
   showProgressBar?: boolean
   onClose?: () => void
+  actions?: IToastAction[]
 }

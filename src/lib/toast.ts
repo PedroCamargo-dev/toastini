@@ -20,8 +20,8 @@ export const toast = {
     promise: Promise<T>,
     {
       loading = 'Carregando...',
-      success = 'Operação concluída!',
-      error = 'Ocorreu um erro!',
+      success,
+      error,
       options = {},
       successOptions = {},
       errorOptions = {},
@@ -35,10 +35,20 @@ export const toast = {
 
     try {
       const data = await promise
-      const successMessage =
-        typeof success === 'function' ? success(data) : success
+      const successResult =
+        typeof success === 'function'
+          ? success(data)
+          : (success ?? { description: 'Operação concluída!' })
+
+      const successUpdate =
+        typeof successResult === 'string'
+          ? { title: 'Sucesso', description: successResult }
+          : {
+              title: successResult.title ?? 'Sucesso',
+              description: successResult.description,
+            }
       toastManager.update(toastId, {
-        title: successMessage,
+        ...successUpdate,
         type: 'success',
         ...options,
         ...successOptions,
@@ -46,10 +56,20 @@ export const toast = {
       return data
     } catch (err) {
       const typedError = err as R
-      const errorMessage =
-        typeof error === 'function' ? error(typedError) : error
+      const errorResult =
+        typeof error === 'function'
+          ? error(typedError)
+          : (error ?? { description: 'Ocorreu um erro!' })
+
+      const errorUpdate =
+        typeof errorResult === 'string'
+          ? { title: 'Erro', description: errorResult }
+          : {
+              title: errorResult.title ?? 'Erro',
+              description: errorResult.description,
+            }
       toastManager.update(toastId, {
-        title: errorMessage,
+        ...errorUpdate,
         type: 'error',
         ...options,
         ...errorOptions,

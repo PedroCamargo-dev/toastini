@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { getInitialOffset, isVertical } from '@/utils'
 import { ToastType } from '@/types'
+import { IToastAction } from '@/interfaces'
 
 interface IUseContainerToast {
   position: string
@@ -9,6 +10,7 @@ interface IUseContainerToast {
   autoClose?: boolean | number
   onRemove: () => void
   type?: ToastType
+  actions?: IToastAction[]
 }
 
 const useContainerToast = ({
@@ -18,6 +20,7 @@ const useContainerToast = ({
   autoClose,
   onRemove,
   type,
+  actions,
 }: IUseContainerToast) => {
   const toastRef = useRef<HTMLDivElement>(null)
   const vertical = isVertical(position)
@@ -28,6 +31,7 @@ const useContainerToast = ({
   const [opacity, setOpacity] = useState(0)
   const [entered, setEntered] = useState(false)
   const [isExiting, setIsExiting] = useState(false)
+  const [isFrozen, setIsFrozen] = useState(!!actions?.length)
   const dragStart = useRef(0)
 
   useEffect(() => {
@@ -65,6 +69,8 @@ const useContainerToast = ({
   }, [triggerRemove])
 
   useEffect(() => {
+    if (isFrozen) return
+
     let timer: ReturnType<typeof setTimeout> | null = null
 
     if (
@@ -81,7 +87,7 @@ const useContainerToast = ({
     return () => {
       if (timer) clearTimeout(timer)
     }
-  }, [autoClose, type])
+  }, [autoClose, type, isFrozen])
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!draggable) return
@@ -119,6 +125,10 @@ const useContainerToast = ({
     }
   }
 
+  const unfreeze = useCallback(() => {
+    setIsFrozen(false)
+  }, [])
+
   const translateValue = entered ? drag : initialOffset
   const transform = vertical
     ? `translateY(${translateValue}px)`
@@ -134,6 +144,7 @@ const useContainerToast = ({
     handleMouseMove,
     handleMouseUp,
     triggerRemove,
+    unfreeze,
   }
 }
 
