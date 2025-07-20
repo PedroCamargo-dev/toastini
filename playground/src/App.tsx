@@ -147,15 +147,9 @@ function App() {
       ...rest,
     }
 
-    const toastMethod = toast[type]
+    // toastMethod removido, não é mais necessário
 
-    if (typeof toastMethod === 'function') {
-      if (type === 'default') {
-        toast.show({ title, ...toastOptions })
-      } else {
-        toastMethod(title, toastOptions)
-      }
-    }
+    toast.show({ title, type, ...toastOptions })
   }
 
   return (
